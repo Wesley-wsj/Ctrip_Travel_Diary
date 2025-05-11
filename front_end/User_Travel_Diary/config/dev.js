@@ -1,10 +1,8 @@
-
-
 export default {
    logger: {
     quiet: false,
     stats: true
   },
-  mini: {hot:true},
+  mini: {},
   h5: {}
 }

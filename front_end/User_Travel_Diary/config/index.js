@@ -6,8 +6,8 @@ import prodConfig from './prod'
 // https://taro-docs.jd.com/docs/next/config#defineconfig-辅助函数
 export default defineConfig(async (merge, { command, mode }) => {
   const baseConfig = {
-    projectName: 'myApp',
-    date: '2025-5-1',
+    projectName: 'user_travel_diary',
+    date: '2025-5-11',
     designWidth: 750,
     deviceRatio: {
       640: 2.34 / 2,
@@ -39,6 +39,12 @@ export default defineConfig(async (merge, { command, mode }) => {
 
           }
         },
+        url: {
+          enable: true,
+          config: {
+            limit: 1024 // 设定转换尺寸上限
+          }
+        },
         cssModules: {
           enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
           config: {
@@ -46,7 +52,7 @@ export default defineConfig(async (merge, { command, mode }) => {
             generateScopedName: '[name]__[local]___[hash:base64:5]'
           }
         }
-      },
+      }
     },
     h5: {
       publicPath: '/',
@@ -83,8 +89,6 @@ export default defineConfig(async (merge, { command, mode }) => {
       }
     }
   }
-
-
   if (process.env.NODE_ENV === 'development') {
     // 本地开发构建配置（不混淆压缩）
     return merge({}, baseConfig, devConfig)

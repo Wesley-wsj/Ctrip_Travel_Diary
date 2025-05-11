@@ -1,9 +1,0 @@
-{
-  "miniprogramRoot": "./",
-  "projectname": "travel-journal",
-  "appid": "testAppId",
-  "setting": {
-    "es6": false,
-    "minified": false
-  }
-}
