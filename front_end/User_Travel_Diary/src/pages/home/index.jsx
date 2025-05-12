@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { VirtualWaterfall } from '@tarojs/components-advanced'
 import Taro, { useLoad } from '@tarojs/taro'
-import { View, Input } from '@tarojs/components'
+import { View, Input, Icon } from '@tarojs/components'
 import Row from '../../components/HomePage/Row';
 import './index.scss'
 import TabBar from '../../components/TabBar'
@@ -41,20 +41,32 @@ const fetchTravelNotes = async (keyword, last_id) => {
 }
 
 export default function HomePage() {
-  // return (
-  //   <View style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
-  //     {/* 空白页面内容 */}
-
-  //     {/* 底部导航栏 */}
-  //     <TabBar currentPath="/pages/home/index" />
-  //   </View>
-  // )
   const [key, setKey] = useState(0)
   const [list, setList] = useState([])
   const [keyword, setKeyword] = useState('')
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [lastId, setLastId] = useState(0)
+
+  // 使用 ref 保存最新状态值
+  const keywordRef = useRef(keyword);
+  const lastIdRef = useRef(lastId);
+  const hasMoreRef = useRef(hasMore);
+  const loadingRef = useRef(loading);
+
+  // 同步 ref 与 state
+  useEffect(() => {
+    keywordRef.current = keyword;
+  }, [keyword]);
+  useEffect(() => {
+    lastIdRef.current = lastId;
+  }, [lastId]);
+  useEffect(() => {
+    hasMoreRef.current = hasMore;
+  }, [hasMore]);
+  useEffect(() => {
+    loadingRef.current = loading;
+  }, [loading]);
 
   // 加载数据
   const loadData = async (searchKey, id) => {
@@ -98,15 +110,19 @@ export default function HomePage() {
 
   //触底加载
   const handleScroll = (e) => {
-    if (loading) return;
+    if (loadingRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = e.detail;
-    if (scrollTop === 0) return
+    if (scrollTop === 0) return;
     if (scrollHeight - (scrollTop + clientHeight) < 10) {
-      loadData(keyword, lastId, hasMore);
+      loadData(keywordRef.current, lastIdRef.current);
     }
   };
 
-  const throttledScroll = _.throttle(handleScroll, 1000);
+  // 使用 useMemo 持久化节流函数
+  const throttledScroll = useMemo(
+    () => _.throttle(handleScroll, 1000), 
+    [] // 依赖项为空数组，确保只创建一次
+  );
 
   return (
     <View className="my-container">

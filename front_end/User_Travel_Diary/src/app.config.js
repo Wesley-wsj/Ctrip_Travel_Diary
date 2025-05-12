@@ -6,6 +6,7 @@ export default defineAppConfig({
     'pages/detail/index',
     'pages/login/index',
     'pages/videoPlayer/index',
+    'pages/user/index',
   ],
   window: {
     backgroundTextStyle: 'light',

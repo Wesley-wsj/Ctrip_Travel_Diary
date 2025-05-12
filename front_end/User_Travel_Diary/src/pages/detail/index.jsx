@@ -1,7 +1,8 @@
-import Taro from '@tarojs/taro'
-import { View, Text, Image, ScrollView, Video, Swiper, SwiperItem } from '@tarojs/components'
-import { useState, useEffect } from 'react'
-import './index.scss'
+import Taro, { useShareAppMessage } from '@tarojs/taro';
+import { View, Text, Image, ScrollView, Video, Swiper, SwiperItem, Button } from '@tarojs/components';
+import { useState, useEffect } from 'react';
+import { FontAwesome } from 'taro-icons';
+import './index.scss';
 
 // 页面配置
 Detail.config = {
@@ -17,6 +18,7 @@ function Detail() {
   // 获取路由参数
   const { id } = Taro.getCurrentInstance().router?.params || {}
 
+  const [time, days, cost, com] = ['2月', '7天', '5.0千', '夫妻']
   // 添加网络状态检测
   const [isWifi, setIsWifi] = useState(false)
 
@@ -71,7 +73,7 @@ function Detail() {
           detailData.media.push({
             type: 'video',
             url: detailData.video_url,
-            poster: 'https://images.unsplash.com/photo-1518639192441-8fce0a366e2e?w=800&q=80'
+            poster: detailData.cover
           })
         }
         detailData.images.forEach(item => {
@@ -116,12 +118,23 @@ function Detail() {
   }
 
   // 分享功能
-  const onShareAppMessage = () => {
+  useShareAppMessage((res) => {
+    // if (res.from === 'button') {
+    // 来自页面内转发按钮
+    console.log(res)
+    // }
     return {
       title: note?.title || '发现一篇精彩的游记',
       path: `/pages/detail/index?id=${id}`
     }
-  }
+  })
+
+  // const onShareAppMessage = () => {
+  //   return {
+  //     title: note?.title || '发现一篇精彩的游记',
+  //     path: `/pages/detail/index?id=${id}`
+  //   }
+  // }
 
   if (loading && !note) {
     return (
@@ -143,7 +156,7 @@ function Detail() {
     <ScrollView className='detail-container' scrollY>
       {/* 用户信息 */}
       <View className='user-card' onClick={() => Taro.navigateTo({
-        url: `/pages/user/index?id=${note.user_id}`
+        url: `/pages/user/index?userId=${note.user_id}`
       })}>
         <Image className='avatar' src={note.avatar_url} />
         <View className='user-info'>
@@ -189,7 +202,6 @@ function Detail() {
                 // onClick={() => previewMedia(index)}
                 >
                   {!isWifi && <View className='play-icon'>▶</View>}
-                  {/* <View className='media-tag'>{item.type === 'video' ? '视频' : '图片'}</View> */}
                 </View>}
               </View>
             ) : (
@@ -203,20 +215,43 @@ function Detail() {
           </SwiperItem>
         ))}
       </Swiper>
+      <View className='media-indicator'>
+        {currentImageIndex + 1}/{note.media.length}
+      </View>
+      <View className='location'>
+        <View className='location-icon'>
+          <FontAwesome color='#fff' name="fal fa-map-marker-alt" size={12} />
+        </View>
+        <View className='location-content'>
+          <Text>杭州</Text>
+        </View>
+        <View className='location-angle'>
+          <FontAwesome color='#c8c8c8' name="far fa-chevron-right" size={14} />
+        </View>
+      </View>
       {/* 游记标题和基本信息 */}
       <View className='header'>
         <Text className='title'>{note.title}</Text>
-        <View className='meta'>
-          <Text className='location'>{note.location}</Text>
-          <Text className='date'>{note.travelDate}</Text>
-        </View>
       </View>
       {/* 游记标签 */}
-      {/* <View className='tags'>
-        {note.tags.map((tag, index) => (
-          <View key={index} className='tag'>{tag}</View>
-        ))}
-      </View> */}
+      <View className='detail-message'>
+        <View className='detail-item'>
+          <Text className='head'>出发时间</Text>
+          <Text className='content'>{note.departure_time}</Text>
+        </View>
+        <View className='detail-item'>
+          <Text className='head'>行程天数</Text>
+          <Text className='content'>{note.days}</Text>
+        </View>
+        <View className='detail-item'>
+          <Text className='head'>人均花费</Text>
+          <Text className='content'>{note.avg_cost}</Text>
+        </View>
+        <View className='detail-item'>
+          <Text className='head'>和谁出行</Text>
+          <Text className='content'>{note.companions}</Text>
+        </View>
+      </View>
 
       {/* 游记正文内容 */}
       <View className='content'>
@@ -228,43 +263,35 @@ function Detail() {
         ))}
       </View>
 
-      {/* 游记统计信息 */}
-      <View className='stats'>
-        <View className='stat-item'>
-          <Text className='stat-icon'>👁️</Text>
-          <Text className='stat-value'>{note.views}</Text>
-        </View>
-        <View className='stat-item'>
-          <Text className='stat-icon'>❤️</Text>
-          <Text className='stat-value'>{note.likes}</Text>
-        </View>
-        <View className='stat-item'>
-          <Text className='stat-icon'>💬</Text>
-          <Text className='stat-value'>{note.comments}</Text>
-        </View>
-      </View>
-
       {/* 发布时间 */}
       <View className='publish-time'>
-        发布于 {note.createdAt}
+        发布于 {note.created_at.slice(0, 10)}
       </View>
 
       {/* 底部操作栏 */}
       <View className='action-bar'>
         <View className='action-btn'>
-          <Text className='action-icon'>❤️</Text>
+          <Text className='action-icon'>
+            <FontAwesome color='red' name="far fa-heart" size={18} />
+          </Text>
           <Text>点赞</Text>
         </View>
         <View className='action-btn'>
-          <Text className='action-icon'>💬</Text>
+          <Text className='action-icon'>
+            <FontAwesome name="fa fa-comments" size={18} />
+          </Text>
           <Text>评论</Text>
         </View>
         <View className='action-btn'>
-          <Text className='action-icon'>⭐</Text>
+          <Text className='action-icon'>
+            <FontAwesome color='rgb(252, 213, 63)' name="fa fa-star" size={18} />
+          </Text>
           <Text>收藏</Text>
         </View>
         <View className='action-btn'>
-          <Text className='action-icon'>↗️</Text>
+          <Text className='action-icon'>
+            <FontAwesome name="fa-solid fa-share" size={18} />
+          </Text>
           <Text>分享</Text>
         </View>
       </View>
