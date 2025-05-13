@@ -6,6 +6,9 @@ export default defineAppConfig({
     'pages/detail/index',
     'pages/login/index',
     'pages/videoPlayer/index',
+    'pages/diary-detail/index',
+    'pages/reEditPost/index',
+    'pages/register/index'
   ],
   window: {
     backgroundTextStyle: 'light',
