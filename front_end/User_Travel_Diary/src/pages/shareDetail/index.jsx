@@ -1,5 +1,5 @@
 import Taro, { useShareAppMessage } from '@tarojs/taro';
-import { View, Text, Image, Swiper, SwiperItem, Video, Button } from '@tarojs/components'
+import { View, Text, Image, Button } from '@tarojs/components'
 import { useState, useEffect } from 'react'
 import { FontAwesome } from 'taro-icons'
 import './index.scss'
@@ -8,116 +8,92 @@ function ShareDetail() {
   const [note, setNote] = useState(null)
   const { id } = Taro.getCurrentInstance().router?.params || {}
 
-  // 获取精简数据
   useEffect(() => {
-    const fetchShareData = async () => {
+    const fetchData = async () => {
       try {
         const res = await Taro.request({
           url: `http://121.43.34.217:5000/api/diaries/approved/${id}`,
           method: 'GET'
         })
-        console.log(res)
+
         if (res.statusCode === 200) {
-          const data = res.data
-          setNote({
-            title: data.title,
-            cover: data.cover,
-            media: data.media,
-            location: data.location,
-            created_at: data.created_at,
-            likes: data.likes_count,
-            views: data.views_count,
-            avatar: data.user?.avatar_url,
-            username: data.user?.username
-          })
+          const detailData = res.data
+
+          const processedData = {
+            ...detailData,
+            coverImage: detailData.video_url ? detailData.cover : 
+              (detailData.images && detailData.images.length > 0 ? 
+                detailData.images[0] + '?x-oss-process=image/resize,w_750' : '')
+          }
+          setNote(processedData)
         }
       } catch (error) {
-        Taro.showToast({ title: '内容加载失败', icon: 'none' })
+        Taro.showToast({ title: '加载失败', icon: 'none' })
         setTimeout(() => Taro.navigateBack(), 1500)
       }
     }
 
-    id && fetchShareData()
+    id && fetchData()
   }, [id])
 
-  // 分享配置
   useShareAppMessage(() => ({
-    title: note?.title || '分享一篇精彩游记',
+    title: note?.title || '发现精彩游记',
     path: `/pages/shareDetail/index?id=${id}`,
-    imageUrl: note?.cover || ''
+    imageUrl: note?.coverImage || ''
   }))
 
   if (!note) return (
     <View className='loading-container'>
-      <Image src='https://example.com/loading.gif' className='loading-gif' />
+      <Text className='loading-text'>加载中...</Text>
     </View>
   )
 
+  // 格式化日期
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
+  }
+
   return (
     <View className='share-container'>
-      {/* 顶部媒体展示 */}
-      <Swiper
-        className='media-swiper'
-        indicatorDots={note.media?.length > 1}
-        autoplay
-        circular
-      >
-        {note.media?.map((item, index) => (
-          <SwiperItem key={index}>
-            {item.type === 'video' ? (
-              <Video
-                src={item.url}
-                poster={item.poster}
-                controls={false}
-                loop
-                muted
-                className='media-video'
-              />
-            ) : (
-              <Image
-                src={item.url}
-                mode='aspectFill'
-                className='media-image'
-              />
-            )}
-          </SwiperItem>
-        ))}
-      </Swiper>
+      {/* 单图展示区域 */}
+      <View className='media-container'>
+        <Image
+          src={note.coverImage}
+          mode='aspectFill'
+          className='cover-image'
+        />
+      </View>
 
       {/* 核心信息展示 */}
-      <View className='content-box'>
-        <Text className='title'>{note.title}</Text>
-        
-        <View className='meta-info'>
-          <Image src={note.avatar} className='user-avatar' />
+      <View className='content-wrapper'>
+        <View className='user-info'>
+          <Image src={note.avatar_url} className='avatar' />
           <Text className='username'>{note.username}</Text>
-          <Text className='location'>{note.location}</Text>
-          <Text className='date'>{note.created_at.slice(0, 10)}</Text>
         </View>
 
-        <View className='stats'>
-          <View className='stat-item'>
-            <FontAwesome name='fa-eye' size={16} />
-            <Text>{note.views}次浏览</Text>
-          </View>
-          <View className='stat-item'>
-            <FontAwesome name='fa-heart' color='#ff4d4d' size={16} />
-            <Text>{note.likes}人喜欢</Text>
-          </View>
+        <Text className='title'>{note.title}</Text>
+        <Text className='location'>{note.location}</Text>
+
+        <View className='publish-date'>
+          <FontAwesome name='fa-calendar' size={14} />
+          <Text className='date-text'>发布于：{formatDate(note.created_at)}</Text>
         </View>
 
         <View className='action-buttons'>
-          <Button
-            className='open-app-btn'
-            onClick={() => Taro.navigateTo({ url: `/pages/detail/index?id=${id}` })}
+          <Button 
+            className='detail-btn'
+            onClick={() => Taro.navigateTo({
+              url: `/pages/detail/index?id=${id}`
+            })}
           >
-            查看完整游记
+            查看完整内容
           </Button>
           <Button 
             className='share-btn' 
             openType='share'
           >
-            立即分享
+            分享给好友
           </Button>
         </View>
       </View>
