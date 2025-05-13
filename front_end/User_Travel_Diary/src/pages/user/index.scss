@@ -1,0 +1,124 @@
+.user-space-container {
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    padding: 0;
+
+    .user-profile {
+        background-color: #fff;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 10px;
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            margin-bottom: 15px;
+
+            .nickname {
+                font-size: 36rpx;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 5px;
+            }
+
+            .bio {
+                font-size: 28rpx;
+                color: #666;
+                // max-width: 80%;
+                margin: 0 auto;
+            }
+        }
+
+        .divider {
+            width: 120%;
+            border-bottom: 0.5px solid #ccc;
+            margin: 20px 0;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 10px 0;
+
+            .stat-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .stat-value {
+                    font-size: 34rpx;
+                    font-weight: bold;
+                    color: #333;
+                }
+
+                .stat-label {
+                    font-size: 28rpx;
+                    color: #999;
+                    margin-top: 3px;
+                }
+            }
+        }
+    }
+
+    .travel-notes-list {
+        background-color: rgb(244, 244, 244);
+
+
+        .section-title {
+            background-color: #fff;
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            padding: 15px 0;
+            text-align: center;
+            display: block;
+        }
+
+        .content {
+            padding: 0 15px;
+            height: 60vh;
+
+            .empty-notes {
+                text-align: center;
+                padding: 30px 0;
+                color: #999;
+            }
+
+            .virtual-waterfall {
+                margin-left: 10px;
+            }
+
+        }
+    }
+}
+
+// 文本溢出省略号
+@mixin text-ellipsis($lines: 1) {
+    @if $lines ==1 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    @else {
+        display: -webkit-box;
+        -webkit-line-clamp: $lines;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

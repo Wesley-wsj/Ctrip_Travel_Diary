@@ -1,6 +1,6 @@
-
 import { useLaunch } from '@tarojs/taro'
 import './app.scss'
+import 'taro-icons/scss/FontAwesome.scss'
 
 function App({ children }) {
 
