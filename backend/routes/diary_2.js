@@ -156,7 +156,8 @@ router.get('/', staffAuth, async (req, res) => {
     const where = { is_deleted: 0 };
     if (status) where.status = status;
     const diaries = await Diary.findAll({ 
-      where
+      where,
+      order: [['id', 'ASC']]
     });
     res.json(processMultipleDiaries(diaries, req));
   } catch (err) {
@@ -165,17 +166,215 @@ router.get('/', staffAuth, async (req, res) => {
   }
 });
 
-// 2. 获取待审核游记列表（需要工作人员认证）
+// // 2. 获取待审核游记列表（需要工作人员认证）
+// router.get('/review-list', staffAuth, async (req, res) => {
+//   try {
+//     const diaries = await Diary.findAll({
+//       where: { 
+//         status: 'pending',
+//         is_deleted: 0
+//       }
+//     });
+//     res.json(processMultipleDiaries(diaries, req));
+//   } catch (err) {
+//     res.status(500).json({ msg: '服务器错误' });
+//   }
+// });
+
+// 2. 获取待审核游记列表（工作人员认证）
 router.get('/review-list', staffAuth, async (req, res) => {
   try {
-    const diaries = await Diary.findAll({
+    const { page = 1, page_size = 10 } = req.query;
+    const offset = (page - 1) * page_size;
+
+    const { count, rows } = await Diary.findAndCountAll({
       where: { 
         status: 'pending',
-        is_deleted: 0
-      }
+        is_deleted: false
+      },
+      limit: parseInt(page_size),
+      offset: offset,
+      order: [['id', 'ASC']]
     });
-    res.json(processMultipleDiaries(diaries, req));
+
+    // 处理返回数据中的媒体URL
+    const processedRows = processMultipleDiaries(rows, req);
+
+    res.json({
+      total: count,
+      page: parseInt(page),
+      page_size: parseInt(page_size),
+      data: processedRows
+    });
   } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: '服务器错误' });
+  }
+});
+
+// 2.5 获取拒绝游记列表（工作人员认证）
+router.get('/rejected-list', staffAuth, async (req, res) => {
+  try {
+    const { page = 1, page_size = 10 } = req.query;
+    const offset = (page - 1) * page_size;
+
+    const { count, rows } = await Diary.findAndCountAll({
+      where: { 
+        status: 'rejected',
+        is_deleted: false
+      },
+      limit: parseInt(page_size),
+      offset: offset,
+      order: [['id', 'ASC']]
+    });
+
+    // 处理返回数据中的媒体URL
+    const processedRows = processMultipleDiaries(rows, req);
+
+    res.json({
+      total: count,
+      page: parseInt(page),
+      page_size: parseInt(page_size),
+      data: processedRows
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: '服务器错误' });
+  }
+});
+
+
+// 2.6 根据关键词搜索游记（管理员可搜索用户名、标题、内容中的关键字，需要认证）
+router.post('/reviewer-search',staffAuth, async (req, res) => {
+  try {
+    const { 
+      start_date,
+      end_date,
+      page = 1,
+      page_size = 10,
+      keyword,
+      last_id,
+      status,
+      is_deleted,
+      search_fields = ['title', 'content', 'user_id']
+    } = req.body;
+
+    // 初始化 where 对象
+    const where = {};
+
+    // 只有当明确指定了 is_deleted 时才添加过滤条件
+    if (is_deleted) {
+      where.is_deleted = is_deleted;
+    }
+
+    // 只有当明确指定了 status 时才添加过滤条件
+    if (status) {
+      where.status = status;
+    }
+
+    if (last_id) {
+      where.id = {
+        [Op.gt]: parseInt(last_id)
+      };
+    }
+
+    if (start_date && end_date) {
+      where.created_at = {
+        [Op.between]: [start_date, end_date]
+      };
+    }
+
+    if (keyword) {
+      where[Op.or] = search_fields.map(field => ({
+        [field]: {
+          [Op.like]: `%${keyword}%`
+        }
+      }));
+    }
+
+    const { count, rows } = await Diary.findAndCountAll({
+      where,
+      limit: parseInt(page_size),
+      offset: last_id ? 0 : (page - 1) * parseInt(page_size),
+      order: [['id', 'ASC']]
+    });
+
+    // 处理返回数据中的媒体URL
+    const processedRows = processMultipleDiaries(rows, req);
+
+    res.json({
+      total: count,
+      page: parseInt(page),
+      page_size: parseInt(page_size),
+      has_more: rows.length === parseInt(page_size),
+      data: processedRows
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: '服务器错误' });
+  }
+});
+
+// 2.7 管理员恢复逻辑删除游记（需要管理员认证）
+router.patch('/:id/recover', adminAuth, async (req, res) => {
+  try {
+    // 先查找游记
+    const diary = await Diary.findOne({
+      where: { id: req.params.id }
+    });
+
+    // 验证游记是否存在
+    if (!diary) {
+      return res.status(404).json({ msg: '游记不存在' });
+    }
+
+    // 验证游记是否已经被删除
+    if (!diary.is_deleted) {
+      return res.status(400).json({ msg: '游记未被逻辑删除' });
+    }
+
+    // 执行逻辑恢复
+    await Diary.update(
+      { is_deleted: 0 ,
+        status: 'pending'//状态变为待审核
+      }, 
+      { where: { id: req.params.id } }
+    );
+    
+    res.json({ msg: '逻辑恢复成功' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: '服务器错误' });
+  }
+});
+
+// 2.8 获取拒绝游记列表（工作人员认证）
+router.get('/deleted-list', staffAuth, async (req, res) => {
+  try {
+    const { page = 1, page_size = 10 } = req.query;
+    const offset = (page - 1) * page_size;
+
+    const { count, rows } = await Diary.findAndCountAll({
+      where: { 
+        // status: 'rejected',
+        is_deleted: true
+      },
+      limit: parseInt(page_size),
+      offset: offset,
+      order: [['id', 'ASC']]
+    });
+
+    // 处理返回数据中的媒体URL
+    const processedRows = processMultipleDiaries(rows, req);
+
+    res.json({
+      total: count,
+      page: parseInt(page),
+      page_size: parseInt(page_size),
+      data: processedRows
+    });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: '服务器错误' });
   }
 });
