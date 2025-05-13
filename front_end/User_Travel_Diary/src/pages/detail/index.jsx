@@ -1,5 +1,5 @@
 import Taro, { useShareAppMessage } from '@tarojs/taro';
-import { View, Text, Image, ScrollView, Video, Swiper, SwiperItem, Button } from '@tarojs/components';
+import { View, Text, Image, ScrollView, Video, Swiper, SwiperItem } from '@tarojs/components';
 import { useState, useEffect } from 'react';
 import { FontAwesome } from 'taro-icons';
 import './index.scss';
@@ -32,13 +32,7 @@ function Detail() {
         console.error('获取网络状态失败:', err)
       }
     }
-
     checkNetwork()
-
-    // 监听网络变化
-    const listener = Taro.onNetworkStatusChange(res => {
-      setIsWifi(res.networkType === 'wifi')
-    })
   }, [])
 
   useEffect(() => {
