@@ -17,7 +17,7 @@ function VideoPlayer() {
     }
     if (isWifi === 'false') {
       Taro.showToast({
-        title: '当前正在使用移动网络，请注意流量消耗',
+        title: '您当前正在使用移动网络，请注意流量消耗~',
         icon: 'none',
         duration: 2000
       })
