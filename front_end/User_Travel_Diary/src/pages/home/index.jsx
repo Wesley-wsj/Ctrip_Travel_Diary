@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { VirtualWaterfall } from '@tarojs/components-advanced'
 import Taro, { useLoad } from '@tarojs/taro'
-import { View, Input, Icon, Text } from '@tarojs/components'
+import { View, Input, Text } from '@tarojs/components'
 import Row from '../../components/HomePage/Row';
 import './index.scss'
 import TabBar from '../../components/TabBar'
 import _ from 'lodash';
+import { FontAwesome } from 'taro-icons';
 
 const fetchTravelNotes = async (keyword, last_id) => {
   try {
@@ -47,6 +48,9 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [lastId, setLastId] = useState(0)
+
+  const [showBackToTop, setShowBackToTop] = useState(false) // 控制回到顶部按钮显示状态
+  const virtualWaterfallRef = useRef(null)
 
   // 使用 ref 保存最新状态值
   const keywordRef = useRef(keyword);
@@ -129,10 +133,25 @@ export default function HomePage() {
     loadData(value, 0)
   }
 
+  const scrollToTop = () => {
+    if (virtualWaterfallRef.current) {
+      try {
+        // 直接滚动到顶部
+        virtualWaterfallRef.current.scrollTo({ top: 0, animated: true })
+      } catch (error) {
+        console.error('滚动到顶部失败:', error)
+        // 回退方案：重新加载数据
+        setKey(prev => prev + 1)
+      }
+    }
+    setShowBackToTop(false)
+  }
+
   //触底加载
   const handleScroll = (e) => {
     if (loadingRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = e.detail;
+    setShowBackToTop(scrollTop > 300);
     if (scrollTop === 0) return;
     if (scrollHeight - (scrollTop + clientHeight) < 10) {
       loadData(keywordRef.current, lastIdRef.current);
@@ -162,6 +181,8 @@ export default function HomePage() {
 
       <View className='content'>
         {list.length ? <VirtualWaterfall
+          ref={virtualWaterfallRef}
+          enhanced
           key={key}
           height="100%" /* 列表的高度 */
           width="100%" /* 列表的宽度 */
@@ -181,6 +202,15 @@ export default function HomePage() {
           </View>
         )}
       </View>
+
+      {/* 回到顶部按钮 */}
+      <View
+        className={`back-to-top ${showBackToTop ? 'show' : ''}`}
+        onClick={scrollToTop}
+      >
+        <FontAwesome color='#fff' name="fal fa-angle-double-up" size={26} />
+      </View>
+
       <TabBar currentPath="/pages/home/index" />
     </View>
   )

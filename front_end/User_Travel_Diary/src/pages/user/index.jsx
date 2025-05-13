@@ -1,6 +1,6 @@
 import Taro, { useLoad } from '@tarojs/taro'
 import { VirtualWaterfall } from '@tarojs/components-advanced'
-import { View, Text, Image, ScrollView } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import { useState, useEffect, useRef, useMemo } from 'react'
 import Row from '../../components/HomePage/Row';
 import './index.scss'
@@ -16,6 +16,8 @@ function UserSpace() {
     const [nickname, setNickname] = useState('未获取用户名')
     const [avatar, setAvatar] = useState('')
     const [hasMore, setHasMore] = useState(true)
+
+    const virtualWaterfallRef = useRef(null)
 
     const lastIdRef = useRef(lastId);
     const hasMoreRef = useRef(hasMore);
@@ -88,6 +90,24 @@ function UserSpace() {
         } finally {
             setLoading(false)
         }
+        setTimeout(() => {
+            const query = Taro.createSelectorQuery()
+            query.select('.virtual-waterfall').fields({
+                size: true,          // 获取元素的宽高
+                scrollOffset: true,  // 获取滚动位置（scrollTop）
+                scrollHeight: true   // 获取滚动内容的总高度
+            }).exec((res) => {
+                const [container] = res || []
+                if (!container) return
+
+                // 当实际内容高度 <= 容器可视高度时自动加载
+                if (container.scrollHeight <= container.height + 5 &&
+                    hasMoreRef.current &&
+                    !loadingRef.current) {
+                    loadData(userId, lastIdRef.current)
+                }
+            })
+        }, 100)
     }
     // console.log(list)
 
@@ -146,6 +166,7 @@ function UserSpace() {
                 <View className='content'>
                     <Text className='section-title'>TA的游记</Text>
                     {list.length ? <VirtualWaterfall
+                        ref={virtualWaterfallRef}
                         key={key}
                         height="100%" /* 列表的高度 */
                         width="100%" /* 列表的宽度 */

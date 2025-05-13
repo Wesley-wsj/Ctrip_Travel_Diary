@@ -42,26 +42,22 @@
 
 .back-to-top {
   position: fixed;
-  right: 20px;
-  bottom: 100px;
-  width: 40px;
-  height: 40px;
+  right: 40px;
+  bottom: 200px; // 可以根据需要调整位置
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 1000;
-  opacity: 0; // 默认透明
-  pointer-events: none; // 默认不响应点击
-  transition: opacity 0.3s; // 平滑过渡
-
-  &[data-visible="true"] {
-    opacity: 1; // 显示
-    pointer-events: auto; // 启用点击
-  }
-
-  &:active {
-    background-color: rgba(0, 0, 0, 0.8); // 点击反馈
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 999;
+  
+  &.show {
+    opacity: 1;
+    visibility: visible;
   }
 }

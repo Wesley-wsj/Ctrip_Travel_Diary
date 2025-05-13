@@ -8,7 +8,8 @@ export default defineAppConfig({
     'pages/videoPlayer/index',
     'pages/diary-detail/index',
     'pages/reEditPost/index',
-    'pages/register/index'
+    'pages/register/index',
+    'pages/user/index',
   ],
   window: {
     backgroundTextStyle: 'light',

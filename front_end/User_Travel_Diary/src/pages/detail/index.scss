@@ -65,10 +65,11 @@
 
 .user-card {
   display: flex;
+  padding-left: 2%;
   align-items: center;
   background-color: #fff;
   border-radius: 8px;
-  margin-bottom: 15px;
+  height: 40PX;
 }
 
 .user-card .avatar {
@@ -80,21 +81,25 @@
 
 .user-card .user-info {
   flex: 1;
+  padding: 0 0 0 10px;
 }
 
 .user-card .user-info .nickname {
   font-size: 30px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 4px;
 }
 
 .user-card .follow-btn {
-  padding: 4px 12px;
-  background-color: #ff2442;
-  color: #fff;
-  border-radius: 15px;
+  margin-right: 20px;
+  line-height: 52px;
+  height: 52px;
+  padding: 4px 24px;
+  background-color: #fff;
+  color: #323232;
+  border-radius: 26px;
   font-size: 30px;
+  border: 1px solid rgb(241, 241, 241);
 }
 
 .content {

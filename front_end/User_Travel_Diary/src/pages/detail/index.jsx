@@ -18,7 +18,6 @@ function Detail() {
   // 获取路由参数
   const { id } = Taro.getCurrentInstance().router?.params || {}
 
-  const [time, days, cost, com] = ['2月', '7天', '5.0千', '夫妻']
   // 添加网络状态检测
   const [isWifi, setIsWifi] = useState(false)
 
@@ -101,9 +100,25 @@ function Detail() {
   const previewMedia = (index) => {
     if (note.media[index].type === 'video') {
       // 视频全屏播放
-      Taro.navigateTo({
-        url: `/pages/videoPlayer/index?videoUrl=${encodeURIComponent(note.media[index].url)}`
-      })
+      if (!isWifi) {
+        Taro.showModal({
+          title: '流量提醒',
+          content: '当前正在使用移动网络，继续播放将消耗流量。',
+          confirmText: '继续播放',
+          cancelText: '取消',
+          success: (res) => {
+            if (res.confirm) {
+              Taro.navigateTo({
+                url: `/pages/videoPlayer/index?videoUrl=${encodeURIComponent(note.media[index].url)}&isWifi=${isWifi}`
+              })
+            }
+          }
+        })
+      } else {
+        Taro.navigateTo({
+          url: `/pages/videoPlayer/index?videoUrl=${encodeURIComponent(note.media[index].url)}&isWifi=${isWifi}`
+        })
+      }
     } else {
       // 图片预览
       const imageUrls = note.media
@@ -162,7 +177,7 @@ function Detail() {
         <View className='user-info'>
           <Text className='nickname'>{note.username}</Text>
         </View>
-        <View className='follow-btn'>关注</View>
+        <View className='follow-btn'>+关注</View>
       </View>
 
       <Swiper
@@ -223,7 +238,7 @@ function Detail() {
           <FontAwesome color='#fff' name="fal fa-map-marker-alt" size={12} />
         </View>
         <View className='location-content'>
-          <Text>杭州</Text>
+          <Text>{note.location}</Text>
         </View>
         <View className='location-angle'>
           <FontAwesome color='#c8c8c8' name="far fa-chevron-right" size={14} />
