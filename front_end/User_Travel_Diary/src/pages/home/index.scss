@@ -21,6 +21,12 @@
 .content {
   margin-top: 5vh;
   height: 85.5vh;
+
+  .empty-notes {
+    text-align: center;
+    padding: 30px 0;
+    color: #999;
+  }
 }
 
 .search-input {
@@ -36,19 +42,26 @@
 
 .back-to-top {
   position: fixed;
-  right: 30px;
-  bottom: 120px; // 在TabBar上方
-  z-index: 999;
-  width: 48px;
-  height: 48px;
-  background: rgba(0, 0, 0, 0.6);
+  right: 20px;
+  bottom: 100px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.3s;
-  
+  z-index: 1000;
+  opacity: 0; // 默认透明
+  pointer-events: none; // 默认不响应点击
+  transition: opacity 0.3s; // 平滑过渡
+
+  &[data-visible="true"] {
+    opacity: 1; // 显示
+    pointer-events: auto; // 启用点击
+  }
+
   &:active {
-    background: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.8); // 点击反馈
   }
 }

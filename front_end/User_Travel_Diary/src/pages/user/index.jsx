@@ -13,6 +13,8 @@ function UserSpace() {
     const [loading, setLoading] = useState(true)
     const [lastId, setLastId] = useState(0)
     const [total, setTotal] = useState(0)
+    const [nickname, setNickname] = useState('未获取用户名')
+    const [avatar, setAvatar] = useState('')
     const [hasMore, setHasMore] = useState(true)
 
     const lastIdRef = useRef(lastId);
@@ -39,8 +41,11 @@ function UserSpace() {
                 url: `http://121.43.34.217:5000/api/diaries/diaries-approved/${userId}?last_id=${last_id}`,
                 method: 'GET',
             });
+            // console.log(res)
             if (last_id === 0) {
                 setTotal(res.data.total)
+                setNickname(res.data.data[0].username)
+                setAvatar(res.data.data[0].avatar_url)
             }
             if (res.statusCode === 200) {
                 return res.data.data.map(item => ({
@@ -84,7 +89,7 @@ function UserSpace() {
             setLoading(false)
         }
     }
-    console.log(list)
+    // console.log(list)
 
     useLoad(() => {
         console.log('加载')
@@ -100,28 +105,26 @@ function UserSpace() {
         }
     };
 
+    const searchNew = () => {
+        console.log(123)
+        loadData(userId, lastIdRef.current);
+    }
+
     const throttledScroll = useMemo(
         () => _.throttle(handleScroll, 1000),
         [] // 依赖项为空数组，确保只创建一次
     );
 
-    if (loading) {
-        return (
-            <View className='user-space-container loading'>
-                <View className='loading-text'>加载中...</View>
-            </View>
-        )
-    }
-
     return (
-        <ScrollView className='user-space-container' scrollY>
+        <View className='user-space-container'>
             {/* 用户信息卡片 */}
             <View className='user-profile'>
-                <Image className='avatar' />
+                <Image className='avatar' src={avatar} />
                 <View className='user-info'>
-                    <Text className='nickname'>{ }</Text>
+                    <Text className='nickname'>{nickname}</Text>
                     <Text className='bio'>暂无个人简介</Text>
                 </View>
+                <View className='divider'></View>
                 <View className='stats'>
                     <View className='stat-item'>
                         <Text className='stat-value'>{total}</Text>
@@ -140,8 +143,8 @@ function UserSpace() {
 
             {/* 用户游记列表 */}
             <View className='travel-notes-list'>
-                <Text className='section-title'>我的游记</Text>
                 <View className='content'>
+                    <Text className='section-title'>TA的游记</Text>
                     {list.length ? <VirtualWaterfall
                         key={key}
                         height="100%" /* 列表的高度 */
@@ -155,7 +158,7 @@ function UserSpace() {
                             }
                         }} /* 列表单项的高度  */
                         onScroll={throttledScroll}
-                        renderBottom={() => loading ? <View className="loading">加载中...</View> : (!hasMore) && <View className="no-more">没有更多了</View>}
+                        renderBottom={() => loading ? <View className="loading">加载中...</View> : (!hasMore) && <View className="no-more" >没有更多了</View>}
                     /> : (
                         <View className='empty-notes'>
                             <Text>暂无游记</Text>
@@ -163,7 +166,7 @@ function UserSpace() {
                     )}
                 </View>
             </View>
-        </ScrollView>
+        </View>
     )
 }
 
