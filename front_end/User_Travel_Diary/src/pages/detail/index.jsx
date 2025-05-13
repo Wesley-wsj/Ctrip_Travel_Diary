@@ -134,9 +134,16 @@ function Detail() {
     // }
     return {
       title: note?.title || '发现一篇精彩的游记',
-      path: `/pages/detail/index?id=${id}`
+      path: `/pages/detail/index?id=${id}`,
+      imageUrl: note.media[0].type === 'video' ? note.media[0].poster : note.media[0].url
     }
   })
+
+  const handleShare = () => {
+    Taro.navigateTo({
+      url: `/pages/shareDetail/index?id=${id}`
+    })
+  }
 
   // const onShareAppMessage = () => {
   //   return {
@@ -297,7 +304,7 @@ function Detail() {
           </Text>
           <Text>收藏</Text>
         </View>
-        <View className='action-btn'>
+        <View className='action-btn' onClick={handleShare}>
           <Text className='action-icon'>
             <FontAwesome name="fa-solid fa-share" size={18} />
           </Text>

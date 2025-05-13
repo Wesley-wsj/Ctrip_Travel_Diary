@@ -10,6 +10,7 @@ export default defineAppConfig({
     'pages/reEditPost/index',
     'pages/register/index',
     'pages/user/index',
+    'pages/shareDetail/index',
   ],
   window: {
     backgroundTextStyle: 'light',
