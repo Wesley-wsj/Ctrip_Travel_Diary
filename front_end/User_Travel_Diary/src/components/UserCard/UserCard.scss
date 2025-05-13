@@ -1,0 +1,38 @@
+.user-card {
+    display: flex;
+    padding-left: 2%;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 8px;
+    height: 40PX;
+
+    .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 12px;
+    }
+
+    .user-info {
+        flex: 1;
+        padding: 0 0 0 10px;
+
+        .nickname {
+            font-size: 30px;
+            font-weight: bold;
+            color: #333;
+        }
+    }
+
+    .follow-btn {
+        margin-right: 20px;
+        line-height: 52px;
+        height: 52px;
+        padding: 4px 24px;
+        background-color: #fff;
+        color: #323232;
+        border-radius: 26px;
+        font-size: 30px;
+        border: 1px solid rgb(241, 241, 241);
+    }
+}

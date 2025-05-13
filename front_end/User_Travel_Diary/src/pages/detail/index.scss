@@ -1,7 +1,7 @@
 .detail-container {
-  padding: 0 10px 50px 10px;
+  padding: 0 10px 10px 10px;
   background-color: #fff;
-  min-height: 100vh;
+  height: 90vh;
   box-sizing: border-box;
 }
 
@@ -62,47 +62,7 @@
   }
 }
 
-
-.user-card {
-  display: flex;
-  padding-left: 2%;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 8px;
-  height: 40PX;
-}
-
-.user-card .avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 12px;
-}
-
-.user-card .user-info {
-  flex: 1;
-  padding: 0 0 0 10px;
-}
-
-.user-card .user-info .nickname {
-  font-size: 30px;
-  font-weight: bold;
-  color: #333;
-}
-
-.user-card .follow-btn {
-  margin-right: 20px;
-  line-height: 52px;
-  height: 52px;
-  padding: 4px 24px;
-  background-color: #fff;
-  color: #323232;
-  border-radius: 26px;
-  font-size: 30px;
-  border: 1px solid rgb(241, 241, 241);
-}
-
-.content {
+.detail-content {
   background-color: #fff;
   margin: 20rpx;
   padding: 15rpx;
@@ -113,13 +73,14 @@
   color: #333;
 }
 
-.content .paragraph {
+.detail-content .paragraph {
   display: block;
   margin-bottom: 12px;
+  font-size: 30px;
 }
 
 .publish-time {
-  font-size: 24px;
+  font-size: 26px;
   color: #999;
   text-align: right;
   margin-bottom: 15px;
@@ -154,55 +115,6 @@
   color: #666;
 }
 
-/* 媒体轮播区域 */
-.media-swiper {
-  position: relative;
-  margin: 10px 0;
-  height: 400px;
-  background-color: #000;
-}
-
-/* 视频容器样式 */
-.video-container {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  height: 100%;
-  vertical-align: top;
-}
-
-.content-video {
-  width: 100%;
-  height: 100%;
-  background-color: #000;
-}
-
-/* 图片样式 */
-.content-image {
-  display: inline-block;
-  width: 100%;
-  height: 100%;
-  vertical-align: top;
-}
-
-.video-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2;
-}
-
-.play-icon {
-  font-size: 80rpx;
-  color: rgba(255, 255, 255, 0.8);
-  text-shadow: 0 0 10rpx rgba(0, 0, 0, 0.5);
-}
-
 .detail-message {
   margin: 10rpx 20rpx;
   border-radius: 40rpx;
@@ -217,12 +129,12 @@
     width: 200rpx;
     height: 150rpx;
   }
-  .head {
+  .item-head {
     text-align: center;
     font-size: 26px;
     color: rgb(170,170,170);
   }
-  .content {
+  .item-content {
     padding: 0;
     margin: 0;
     text-align: center;
@@ -230,17 +142,5 @@
     font-size: 42px;
     font-weight: 700;
   }
-}
-
-.media-indicator {
-  position: absolute;
-  right: 15px;
-  top: 100px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 26px;
-  z-index: 99;
 }
 
