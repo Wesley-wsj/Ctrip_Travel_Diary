@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { View, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import './Row.css'
+import './Row.scss'
 
 const Row = memo(({ id, index, data }) => {
     const item = data[index];

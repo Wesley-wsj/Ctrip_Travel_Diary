@@ -16,7 +16,7 @@ function ShareDetail() {
           url: `http://121.43.34.217:5000/api/diaries/approved/${id}`,
           method: 'GET'
         })
-        
+        console.log(res)
         if (res.statusCode === 200) {
           const data = res.data
           setNote({

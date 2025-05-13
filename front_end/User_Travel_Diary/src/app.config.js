@@ -11,6 +11,7 @@ export default defineAppConfig({
     'pages/register/index',
     'pages/user/index',
     'pages/shareDetail/index',
+    'pages/search/index'
   ],
   window: {
     backgroundTextStyle: 'light',

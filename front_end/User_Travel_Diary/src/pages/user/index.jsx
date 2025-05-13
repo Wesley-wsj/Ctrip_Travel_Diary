@@ -1,37 +1,32 @@
 import Taro, { useLoad } from '@tarojs/taro'
-import { VirtualWaterfall } from '@tarojs/components-advanced'
 import { View, Text, Image } from '@tarojs/components'
 import { useState, useEffect, useRef, useMemo } from 'react'
-import Row from '../../components/HomePage/Row';
+import { useSearch } from '../../hooks/useSearch'
+import TravelNotesList from '../../components/TravelNotesList/TravelNotesList'
 import './index.scss'
 import _ from 'lodash';
 
 
 function UserSpace() {
-    const [key, setKey] = useState(0)
-    const [list, setList] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [lastId, setLastId] = useState(0)
     const [total, setTotal] = useState(0)
     const [nickname, setNickname] = useState('未获取用户名')
     const [avatar, setAvatar] = useState('')
-    const [hasMore, setHasMore] = useState(true)
 
-    const virtualWaterfallRef = useRef(null)
+    const {
+        key,
+        list,
+        loading,
+        hasMore,
+        setLastId,
+        lastIdRef,
+        setLoading,
+        loadingRef,
+        hasMoreRef,
+        setHasMore,
+        setKey,
+        setList
+    } = useSearch();
 
-    const lastIdRef = useRef(lastId);
-    const hasMoreRef = useRef(hasMore);
-    const loadingRef = useRef(loading);
-
-    useEffect(() => {
-        lastIdRef.current = lastId;
-    }, [lastId]);
-    useEffect(() => {
-        hasMoreRef.current = hasMore;
-    }, [hasMore]);
-    useEffect(() => {
-        loadingRef.current = loading;
-    }, [loading]);
 
     // 获取路由参数
     const { userId } = Taro.getCurrentInstance().router?.params || {}
@@ -116,24 +111,9 @@ function UserSpace() {
         loadData(userId, 0)
     })
 
-    const handleScroll = (e) => {
-        if (loadingRef.current) return;
-        const { scrollTop, scrollHeight, clientHeight } = e.detail;
-        if (scrollTop === 0) return;
-        if (scrollHeight - (scrollTop + clientHeight) < 10) {
-            loadData(userId, lastIdRef.current);
-        }
-    };
-
-    const searchNew = () => {
-        console.log(123)
+    const handleLoadMore = () => {
         loadData(userId, lastIdRef.current);
     }
-
-    const throttledScroll = useMemo(
-        () => _.throttle(handleScroll, 1000),
-        [] // 依赖项为空数组，确保只创建一次
-    );
 
     return (
         <View className='user-space-container'>
@@ -160,33 +140,16 @@ function UserSpace() {
                     </View>
                 </View>
             </View>
-
+            <Text className='section-title'>TA的游记</Text>
             {/* 用户游记列表 */}
-            <View className='travel-notes-list'>
-                <View className='content'>
-                    <Text className='section-title'>TA的游记</Text>
-                    {list.length ? <VirtualWaterfall
-                        ref={virtualWaterfallRef}
-                        key={key}
-                        height="100%" /* 列表的高度 */
-                        width="100%" /* 列表的宽度 */
-                        item={Row} /* 列表单项组件，这里只能传入一个组件 */
-                        itemData={list} /* 渲染列表的数据 */
-                        itemCount={list.length} /* 渲染列表的长度 */
-                        itemSize={(i, D) => {
-                            if (D) {
-                                return D[i].height + 56;
-                            }
-                        }} /* 列表单项的高度  */
-                        onScroll={throttledScroll}
-                        renderBottom={() => loading ? <View className="loading">加载中...</View> : (!hasMore) && <View className="no-more" >没有更多了</View>}
-                    /> : (
-                        <View className='empty-notes'>
-                            <Text>暂无游记</Text>
-                        </View>
-                    )}
-                </View>
-            </View>
+            <TravelNotesList
+                list={list}
+                loading={loading}
+                hasMore={hasMore}
+                key={key}
+                onLoadMore={handleLoadMore}
+                onSearch={handleLoadMore}
+            />
         </View>
     )
 }
