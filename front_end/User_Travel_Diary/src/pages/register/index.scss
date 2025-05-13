@@ -1,0 +1,245 @@
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f0f4f8;
+    padding: 40rpx 20rpx;
+  }
+  
+  .form-card {
+    width: 90%;
+    max-width: 700rpx;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    padding: 60rpx 40rpx;
+    border-radius: 24rpx;
+    box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.06);
+  }
+  
+  .form-title {
+    font-size: 40rpx;
+    font-weight: bold;
+    color: #222;
+    text-align: center;
+    margin-bottom: 50rpx;
+  }
+  
+  .form-input {
+    margin-bottom: 30rpx;
+    background-color: #f4f5f7;
+    padding: 26rpx 32rpx;
+    border-radius: 20rpx;
+    font-size: 32rpx;
+    color: #333;
+  }
+  
+  .avatar-upload {
+    margin-bottom: 30rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .avatar-button {
+    padding: 16rpx 32rpx;
+    background-color: #f4f5f7;
+    border-radius: 20rpx;
+    font-size: 32rpx;
+    color: #333;
+    cursor: pointer;
+    text-align: center;
+    width: 200rpx;
+    text-align: center;
+  }
+  
+  .avatar-button:hover {
+    background-color: #e0e4e8;
+  }
+  
+  .avatar-upload Text {
+    margin-top: 10rpx;
+    font-size: 28rpx;
+    color: #555;
+  }
+  
+  .form-checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40rpx;
+    font-size: 28rpx;
+    color: #555;
+    flex-wrap: wrap;
+  }
+  
+  .checkbox-label {
+    margin-left: 16rpx;
+    line-height: 1.5;
+  }
+  
+  .form-button {
+    height: 88rpx;
+    font-size: 34rpx;
+    font-weight: bold;
+    background-color: #1aad19;
+    color: white;
+    border-radius: 16rpx;
+    margin-bottom: 30rpx;
+  }
+  
+  .form-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 26rpx;
+    color: #777;
+  }
+  
+  .form-code-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30rpx;
+  }
+  
+  .form-input-code {
+    flex: 1;
+    background-color: #f4f5f7;
+    padding: 26rpx 32rpx;
+    border-radius: 20rpx;
+    font-size: 32rpx;
+    color: #333;
+    margin-right: 20rpx;
+  }
+  
+  .send-code-button {
+    background-color: #1aad19;
+    color: white;
+    font-size: 30rpx;
+    font-weight: bold;
+    border-radius: 12rpx;
+    height: 72rpx;
+    line-height: 72rpx;
+    white-space: nowrap;
+  }
+  
+
+
+  .form-container {
+    padding: 40rpx;
+    min-height: 100vh;
+    background: #f5f5f5;
+  
+    .form-card {
+      background: white;
+      border-radius: 16rpx;
+      padding: 40rpx;
+      box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);
+    }
+  
+    .form-title {
+      display: block;
+      font-size: 36rpx;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 60rpx;
+      color: #333;
+    }
+  
+    .form-input {
+      height: 88rpx;
+      padding: 0 20rpx;
+      margin-bottom: 30rpx;
+      background: #f8f8f8;
+      border-radius: 8rpx;
+      font-size: 28rpx;
+    }
+  
+    .avatar-section {
+      margin: 30rpx 0;
+  
+      .section-title {
+        font-size: 28rpx;
+        color: #666;
+        margin-bottom: 20rpx;
+      }
+  
+      .avatar-upload {
+        display: flex;
+        align-items: center;
+        gap: 30rpx;
+  
+        .avatar-button {
+          width: 160rpx;
+          height: 160rpx;
+          line-height: 160rpx;
+          text-align: center;
+          font-size: 24rpx;
+          color: #666;
+          background: #f8f8f8;
+          border: 2rpx dashed #ddd;
+          border-radius: 8rpx;
+  
+          &.uploaded {
+            border-style: solid;
+            border-color: #07c160;
+          }
+        }
+  
+        .avatar-preview {
+          width: 160rpx;
+          height: 160rpx;
+          border-radius: 8rpx;
+        }
+      }
+    }
+  
+    .agreement-group {
+      margin: 40rpx 0;
+  
+      .form-checkbox {
+        display: flex;
+        align-items: center;
+        font-size: 24rpx;
+        color: #666;
+  
+        .checkbox-label {
+          margin-left: 10rpx;
+  
+          .link {
+            color: #07c160;
+            margin-left: 6rpx;
+          }
+        }
+      }
+    }
+  
+    .form-button {
+      margin-top: 50rpx;
+      font-size: 32rpx;
+      height: 88rpx;
+      line-height: 88rpx;
+      border-radius: 44rpx;
+      background: #07c160;
+  
+      &.disabled {
+        opacity: 0.6;
+      }
+    }
+  
+    .form-footer {
+      margin-top: 40rpx;
+      display: flex;
+      justify-content: center;
+      gap: 30rpx;
+      font-size: 24rpx;
+  
+      .divider {
+        color: #ddd;
+      }
+  
+      .nav-link {
+        color: #07c160;
+      }
+    }
+  }

@@ -1,322 +1,457 @@
 .select-home {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #f8f8f8;
-    padding-bottom: 120rpx;
-  }
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+  padding-bottom: 120rpx;
+}
+
+.profile-header {
+  position: relative;
+  width: 100%;
+  height: 360rpx;
+  overflow: hidden;
+}
+
+.profile-bg {
+  width: 100%;
+  height: 360rpx;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.profile-info {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: 40rpx 30rpx 0;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 4rpx solid #fff;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+}
+
+.nickname-section {
+  margin-left: 30rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.nickname {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.user-id {
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 8rpx;
+}
+
+.user-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30rpx;
+  background: #fff;
+  padding: 20rpx 0;
+  border-top: 1rpx solid #eee;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-num {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #888;
+}
+
+.main-publish {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 120rpx;
+}
+
+.camera-icon {
+  width: 100rpx;
+  height: 100rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.5;
+}
+
+.slogan {
+  font-size: 28rpx;
+  color: #888;
+  margin-bottom: 40rpx;
+}
+
+.go-publish-btn {
+  border: 1px solid #ccc;
+  border-radius: 40rpx;
+  padding: 10rpx 40rpx;
+  color: #333;
+  background-color: #fff;
+}
+
+.my-notes-section {
+  padding: 0 20rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin: 20rpx 0;
+}
+
+.waterfall-masonry {
+  column-count: 2;
+  column-gap: 20rpx;
+}
+
+.note-card {
+  break-inside: avoid;
+  margin-bottom: 20rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.note-cover {
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  border-radius: 8rpx 8rpx 0 0;
+}
+
+.note-content {
+  padding: 20rpx;
+  position: relative;
+}
+
+.note-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.note-time {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 10rpx;
+  right: 10rpx;
+  width: 40rpx;
+  height: 40rpx;
+  line-height: 40rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  z-index: 10;
+  transition: background-color 0.2s;
   
-  .profile-header {
-    position: relative;
-    width: 100%;
-    height: 360rpx;
-    overflow: hidden;
+  &:active {
+    background-color: rgba(0, 0, 0, 0.7);
   }
-  
-  .profile-bg {
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.home_plus {
+  height: 100rpx;
+  line-height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.home_plus:hover {
+  color: #ff2c55;
+  transform: scale(1.4);
+}
+
+.mine_plus {
+  color: #ff2c55;
+  height: 100rpx;
+  line-height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(1.4);
+}
+
+.plus {
+  font-size: 45rpx;
+  color: #fff;
+  background-color: #ff2c55;
+  width: 45rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  border-radius: 10%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -10rpx;
+  transition: transform 0.3s ease-in-out;
+}
+
+.plus:hover {
+  transform: scale(1.2);
+}
+
+.logout-button {
+  position: absolute;
+  top: 100rpx;
+  right: 20rpx;
+  font-size: 24rpx;
+  color: #999;
+  padding: 10rpx 20rpx;
+  background-color: #f4f4f4;
+  border-radius: 30rpx;
+  z-index: 10;
+}
+
+// 头像相关样式
+.avatar-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 20px;
+
+  .avatar {
     width: 100%;
-    height: 360rpx;
-    object-fit: cover;
+    height: 100%;
+    transition: opacity 0.3s;
+  }
+
+  .avatar-edit-overlay {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 0;
-  }
-  
-  .profile-info {
-    position: relative;
-    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
     display: flex;
     align-items: center;
-    padding: 40rpx 30rpx 0;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+
+    .edit-text {
+      color: white;
+      font-size: 12px;
+    }
+  }
+
+  &:active {
+    .avatar {
+      opacity: 0.7;
+    }
+    
+    .avatar-edit-overlay {
+      opacity: 1;
+    }
   }
   
-  .avatar {
-    width: 120rpx;
-    height: 120rpx;
-    border-radius: 50%;
-    border: 4rpx solid #fff;
-    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
+  &:hover {
+    .avatar-edit-overlay {
+      opacity: 0.7;
+    }
   }
-  
-  .nickname-section {
-    margin-left: 30rpx;
-    display: flex;
-    flex-direction: column;
-  }
-  
+}
+
+.nickname-section {
   .nickname {
-    font-size: 36rpx;
+    font-size: 32rpx;  // 移动端适中大小（约16px）
     font-weight: bold;
-    color: #333;
+    margin-bottom: 8rpx;
+    
+    /* PC端适配（通过媒体查询） */
+    @media (min-width: 768px) {
+      font-size: 16px; // 固定值，避免过大
+    }
   }
   
   .user-id {
-    font-size: 24rpx;
+    font-size: 24rpx;  // 移动端（约12px）
     color: #666;
-    margin-top: 8rpx;
+    
+    @media (min-width: 768px) {
+      font-size: 12px;
+    }
   }
+}
+
+// 加载状态容器
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200rpx;
+  width: 100%;
+  color: #999;
+  font-size: 28rpx;
+}
+
+// "新建笔记"按钮
+.add-more-btn {
+  margin: 30rpx auto;
+  width: 250rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background-color: #f8f8f8;
+  color: #666;
+  border: 1px dashed #ccc;
+  border-radius: 40rpx;
+  font-size: 28rpx;
   
-  .user-stats {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 30rpx;
-    background: #fff;
-    padding: 20rpx 0;
-    border-top: 1rpx solid #eee;
+  &:active {
+    background-color: #f0f0f0;
   }
+}
+
+// 优化视频播放样式
+.note-cover.video {
+  position: relative;
   
-  .stat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .stat-num {
-    font-size: 30rpx;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .stat-label {
-    font-size: 24rpx;
-    color: #888;
-  }
-  
-  .main-publish {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 120rpx;
-  }
-  
-  .camera-icon {
-    width: 100rpx;
-    height: 100rpx;
-    margin-bottom: 20rpx;
-    opacity: 0.5;
-  }
-  
-  .slogan {
-    font-size: 28rpx;
-    color: #888;
-    margin-bottom: 40rpx;
-  }
-  
-  .go-publish-btn {
-    border: 1px solid #ccc;
-    border-radius: 40rpx;
-    padding: 10rpx 40rpx;
-    color: #333;
-    background-color: #fff;
-  }
-  
-  .my-notes-section {
-    padding: 0 20rpx;
-  }
-  
-  .section-title {
-    font-size: 36rpx;
-    font-weight: bold;
-    margin: 20rpx 0;
-  }
-  
-  .waterfall-masonry {
-    column-count: 2;
-    column-gap: 20rpx;
-  }
-  
-  .note-card {
-    break-inside: avoid;
-    margin-bottom: 20rpx;
-    background-color: #fff;
-    border-radius: 16rpx;
-    overflow: hidden;
-    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
-    position: relative;
-    display: inline-block;
-    width: 100%;
-  }
-  
-  .note-cover {
-    width: 100%;
-    border-bottom: 1px solid #eee;
-    border-radius: 8rpx 8rpx 0 0;
-  }
-  
-  .note-content {
-    padding: 20rpx;
-  }
-  
-  .note-title {
-    font-size: 28rpx;
-    font-weight: bold;
-    margin-bottom: 10rpx;
-  }
-  
-  .note-time {
-    font-size: 22rpx;
-    color: #999;
-  }
-  
-  .delete-btn {
+  &::after {
+    content: '';
     position: absolute;
-    top: 10rpx;
-    right: 10rpx;
-    width: 40rpx;
-    height: 40rpx;
-    line-height: 40rpx;
-    text-align: center;
-    font-size: 32rpx;
-    color: #fff;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60rpx;
+    height: 60rpx;
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 50%;
-    z-index: 10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+
+// 优化确认按钮的样式
+.go-publish-btn {
+  transition: all 0.3s;
+  
+  &:active {
+    background-color: #f8f8f8;
+    transform: scale(0.98);
+  }
+}
+
+// 媒体容器，用于放置图片/视频和标签
+.media-container {
+  position: relative;
+  width: 100%;
+}
+
+// 被拒绝笔记样式
+.rejected-note {
+  border: 2rpx solid #ff4d4f;
+}
+
+// 状态标签 - 统一样式，位于左上角
+.status-tag {
+  position: absolute;
+  top: 6rpx;
+  left: 6rpx;
+  font-size: 18rpx;
+  padding: 2rpx 6rpx;
+  border-radius: 4rpx;
+  z-index: 10;
+  line-height: 1.2;
+  color: white;
+  font-weight: normal;
+  border: none;
+  box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.2);
+}
+
+// 不同状态的颜色
+.status-rejected {
+  background-color: #ff4d4f;
+}
+
+.status-pending {
+  background-color: #faad14;
+}
+
+.status-approved {
+  background-color: #52c41a;
+}
+
+.status-unknown {
+  background-color: #d9d9d9;
+  color: #666;
+}
+
+// 底部操作按钮区
+.bottom-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 10rpx 16rpx 16rpx;
+  position: relative;
+  
+  .reason-btn, .edit-btn {
+    font-size: 22rpx;
+    padding: 4rpx 12rpx;
+    border-radius: 6rpx;
+    color: white;
   }
   
-  .tab-item {
-    flex: 1;
-    text-align: center;
-    font-size: 26rpx;
-    color: #333;
+  .reason-btn {
+    background-color: #faad14;
+    align-self: flex-start; // 靠左
   }
   
-  .home_plus {
-    height: 100rpx;
-    line-height: 100rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease-in-out;
+  .edit-btn {
+    background-color: #1890ff;
+    align-self: flex-end; // 靠右
   }
-  
-  .home_plus:hover {
-    color: #ff2c55;
-    transform: scale(1.4);
-  }
-  
-  .mine_plus {
-    color: #ff2c55;
-    height: 100rpx;
-    line-height: 100rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transform: scale(1.4);
-  }
-  
-  .plus {
-    font-size: 45rpx;
-    color: #fff;
-    background-color: #ff2c55;
-    width: 45rpx;
-    height: 60rpx;
-    line-height: 60rpx;
-    border-radius: 10%;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: -10rpx;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .plus:hover {
-    transform: scale(1.2);
-  }
-  
-  
-  .logout-button {
-    position: absolute;
-    top: 100rpx;
-    right: 20rpx;
-    font-size: 24rpx;
-    color: #999;
-    padding: 10rpx 20rpx;
-    background-color: #f4f4f4;
-    border-radius: 30rpx;
-    z-index: 10;
-  }
-  
-  
-  // 新增头像相关样式
-  .avatar-container {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 20px;
-  
-    .avatar {
-      width: 100%;
-      height: 100%;
-      transition: opacity 0.3s;
-    }
-  
-    .avatar-edit-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s;
-  
-      .edit-text {
-        color: white;
-        font-size: 12px;
-      }
-    }
-  
-    &:active {
-      .avatar {
-        opacity: 0.7;
-      }
-      
-      .avatar-edit-overlay {
-        opacity: 1;
-      }
-    }
-  }
-  
-  // // 调整用户信息展示样式
-  // .nickname-section {
-  //   flex: 1;
-    
-  //   .nickname {
-  //     font-size: 24rpx;
-  //     font-weight: bold;
-  //     margin-bottom: 5rpx;
-  //   }
-    
-  //   .user-id {
-  //     font-size: 14rpx;
-  //     color: #666;
-  //   }
-  // }
-  .nickname-section {
-    .nickname {
-      font-size: 32rpx;  // 移动端适中大小（约16px）
-      font-weight: bold;
-      margin-bottom: 8rpx;
-      
-      /* PC端适配（通过媒体查询） */
-      @media (min-width: 768px) {
-        font-size: 16px; // 固定值，避免过大
-      }
-    }
-    
-    .user-id {
-      font-size: 24rpx;  // 移动端（约12px）
-      color: #666;
-      
-      @media (min-width: 768px) {
-        font-size: 12px;
-      }
-    }
-  }
+}
+
+// 当只有一个编辑按钮时的单独样式类
+.edit-btn-only {
+  margin-left: auto; // 使其居右
+}
+
+// 两个按钮并存时的容器样式
+.bottom-actions-with-two-btns {
+  justify-content: space-between;
+}
