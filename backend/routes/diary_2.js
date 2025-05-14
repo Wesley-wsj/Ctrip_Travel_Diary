@@ -272,6 +272,7 @@ router.post('/search',  async (req, res) => {
 });
 
 
+
 // 5. 创建新游记（需要用户认证）
 router.post('/upload', userAuth, upload.fields([
   { name: 'images', maxCount: 9 },
@@ -314,7 +315,8 @@ router.post('/upload', userAuth, upload.fields([
       coverPath = `../uploads/diaries/covers/${coverFilename}`;
       
       // 确保封面目录存在
-      const coverDir = '../uploads/diaries/covers';
+    //   const coverDir = '../uploads/diaries/covers';
+        const coverDir = '/www/wwwroot/backend/uploads/diaries/covers';
       if (!fs.existsSync(coverDir)) {
         fs.mkdirSync(coverDir, { recursive: true });
       }
@@ -360,6 +362,7 @@ router.post('/upload', userAuth, upload.fields([
       username: req.user.username,
       avatar_url: avatar_url,
       status: 'pending',
+    // status:"rejected",//.....................................................................//.........................
       first_image_ratio: firstImageRatio,
       departure_time,
       avg_cost: avg_cost ? parseFloat(avg_cost) : null,

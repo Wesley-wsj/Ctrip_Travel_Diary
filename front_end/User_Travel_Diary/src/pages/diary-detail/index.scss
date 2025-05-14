@@ -1,6 +1,6 @@
 .detail-container {
   padding: 0 10px 50px 10px;
-  background-color: #f8f8f8;
+  background-color: #fff;
   min-height: 100vh;
   box-sizing: border-box;
 }
@@ -15,7 +15,7 @@
 
 .detail-container.loading .loading-text,
 .detail-container.empty .empty-text {
-  font-size: 16px;
+  font-size: 26px;
   color: #666;
 }
 
@@ -24,38 +24,52 @@
 }
 
 .header .title {
-  font-size: 36px;
+  margin: 20rpx;
+  font-size: 42px;
   font-weight: bold;
   color: #333;
   line-height: 1.4;
 }
 
-.header .meta {
+.location {
+  margin: 40rpx 20rpx 20rpx 15rpx;
   display: flex;
-  margin-top: 10px;
-  font-size: 28px;
-  color: #666;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 50rpx;
+  width: 240rpx;
+  border-radius: 25rpx;
+  background-color: rgb(240, 240, 240);
+
+  .location-icon,.location-angle {
+    height: 50rpx;
+    width: 50rpx;
+    text-align: center;
+    border-radius: 50%;
+    background-color: rgb(50, 50, 50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .location-content {
+    font-size: 30rpx;
+  }
+
+  .location-angle {
+    background-color: rgb(240, 240, 240);
+  }
 }
 
-.header .meta .location {
-  margin-right: 15px;
-}
-
-.header .meta .location::before {
-  content: '📍 ';
-}
-
-.header .meta .date::before {
-  content: '📅 ';
-}
-
+/* 用户卡片样式 - 与detail/index完全一致 */
 .user-card {
   display: flex;
+  padding-left: 2%;
   align-items: center;
-  padding: 12px;
   background-color: #fff;
   border-radius: 8px;
-  margin-bottom: 15px;
+  height: 40PX;
 }
 
 .user-card .avatar {
@@ -67,90 +81,54 @@
 
 .user-card .user-info {
   flex: 1;
+  padding: 0 0 0 10px;
 }
 
 .user-card .user-info .nickname {
-  font-size: 26px;
+  font-size: 30px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 4px;
-}
-
-.user-card .user-info .bio {
-  margin-left: 5px;
-  font-size: 20px;
-  color: #999;
 }
 
 .user-card .follow-btn {
-  padding: 4px 12px;
-  background-color: #ff2442;
-  color: #fff;
-  border-radius: 15px;
-  font-size: 24px;
+  margin-right: 20px;
+  line-height: 52px;
+  height: 52px;
+  padding: 4px 24px;
+  background-color: #fff;
+  color: #323232;
+  border-radius: 26px;
+  font-size: 30px;
+  border: 1px solid rgb(241, 241, 241);
 }
 
-/* 新增：编辑按钮样式 */
+/* 编辑按钮样式 */
 .user-card .edit-btn {
-  padding: 4px 12px;
-  background-color: #3399ff;
-  color: #fff;
-  border-radius: 15px;
-  font-size: 24px;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-}
-
-.tags .tag {
-  padding: 4px 10px;
-  background-color: #f0f7ff;
-  color: #1989fa;
-  border-radius: 4px;
-  font-size: 24px;
-  margin-right: 8px;
-  margin-bottom: 8px;
+  margin-right: 20px;
+  line-height: 52px;
+  height: 52px;
+  padding: 4px 24px;
+  background-color: #fff;
+  color: #3399ff;
+  border-radius: 26px;
+  font-size: 30px;
+  border: 1px solid #3399ff;
 }
 
 .content {
   background-color: #fff;
-  padding: 15px;
+  margin: 20rpx;
+  padding: 15rpx;
   border-radius: 8px;
   margin-bottom: 15px;
   line-height: 1.8;
-  font-size: 24px;
+  font-size: 28px;
   color: #333;
 }
 
 .content .paragraph {
   display: block;
   margin-bottom: 12px;
-}
-
-.stats {
-  display: flex;
-  justify-content: space-around;
-  background-color: #fff;
-  padding: 12px 0;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-.stats .stat-item {
-  display: flex;
-  align-items: center;
-  font-size: 26px;
-}
-
-.stats .stat-item .stat-icon {
-  margin-right: 5px;
-}
-
-.stats .stat-item .stat-value {
-  color: #666;
 }
 
 .publish-time {
@@ -162,7 +140,7 @@
 
 .action-bar {
   position: fixed;
-  bottom: 0;
+  bottom: 2vh;
   left: 0;
   right: 0;
   display: flex;
@@ -180,53 +158,44 @@
 }
 
 .action-bar .action-btn .action-icon {
-  font-size: 20px;
+  font-size: 40px;
   margin-bottom: 4px;
 }
 
 .action-bar .action-btn text {
-  font-size: 12px;
+  font-size: 32px;
   color: #666;
 }
 
-/* 媒体轮播区域 - 修改部分 */
+/* 媒体轮播区域 */
 .media-swiper {
   position: relative;
   margin: 10px 0;
-  height: 500px; /* 增加轮播高度以显示更多图片内容 */
-  background-color: #fff;
-}
-
-.swiper-item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 400px;
+  background-color: #000;
 }
 
 /* 视频容器样式 */
 .video-container {
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: inline-block;
   width: 100%;
   height: 100%;
+  vertical-align: top;
 }
 
 .content-video {
   width: 100%;
   height: 100%;
-  background-color: #fff;
-  object-fit: contain; /* 确保视频不被裁剪 */
+  background-color: #000;
 }
 
+/* 图片样式 */
 .content-image {
-  display: flex;
+  display: inline-block;
   width: 100%;
   height: 100%;
   vertical-align: top;
-  object-fit: contain; /* 确保图片不被裁剪 */
-  background-color: #fff;
 }
 
 .video-overlay {
@@ -247,11 +216,43 @@
   text-shadow: 0 0 10rpx rgba(0, 0, 0, 0.5);
 }
 
-/* 新增：编辑相关样式 */
-.action-bar .action-btn.edit-btn {
-  color: #3399ff;
+.detail-message {
+  margin: 10rpx 20rpx;
+  border-radius: 40rpx;
+  display: flex;
+  justify-content: space-evenly;
+  background-color: rgb(250,250,250);
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 200rpx;
+    height: 150rpx;
+  }
+  .head {
+    text-align: center;
+    font-size: 26px;
+    color: rgb(170,170,170);
+  }
+  .content {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    background-color: rgb(250,250,250);
+    font-size: 42px;
+    font-weight: 700;
+  }
 }
 
-.action-bar .action-btn.edit-btn .action-icon {
-  color: #3399ff;
+.media-indicator {
+  position: absolute;
+  right: 15px;
+  top: 100px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 26px;
+  z-index: 99;
 }
