@@ -10,8 +10,12 @@ export default defineAppConfig({
     'pages/reEditPost/index',
     'pages/register/index',
     'pages/user/index',
+<<<<<<< HEAD
+
+=======
     'pages/shareDetail/index',
     'pages/search/index'
+>>>>>>> 870713297fdce665d19aeff1542693e4109cb19c
   ],
   window: {
     backgroundTextStyle: 'light',
@@ -24,8 +28,10 @@ export default defineAppConfig({
       desc: '你的位置信息将用于小程序位置接口的效果展示'
     }
   },
+  // 根据错误信息修改为正确的配置
   requiredPrivateInfos: [
     'chooseLocation',
     'getLocation'
+    // 删除了后面的权限项，因为错误信息表明这些项设置有问题
   ]
 })

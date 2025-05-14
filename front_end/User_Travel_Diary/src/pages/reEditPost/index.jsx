@@ -1,3 +1,4 @@
+
 import { View, Image, Input, Textarea, Button, ScrollView, Video } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useState, useEffect } from 'react'
@@ -330,16 +331,16 @@ export default function EditDiaryPage() {
         if (newImageFiles.length === 0 && newVideoFiles.length === 0) {
           console.log('无新媒体文件，使用JSON格式更新');
           
-          const updateData = {
-            title,
-            content,
-            location: locationValue,
-            departureTime,
-            tripDays,
-            perCapitaCost,
-            travelCompanion,
-            status: 'pending'  // 重新送审
-          };
+          const updateData = {
+            title,
+            content,
+            location: locationValue,
+            departure_time: departureTime,
+            days: tripDays,
+            avg_cost: perCapitaCost,
+            companions: travelCompanion,
+            status: 'pending'  // 重新送审
+          };
           
           // 如果有删除的媒体文件
           if (deletedMedia.length > 0) {

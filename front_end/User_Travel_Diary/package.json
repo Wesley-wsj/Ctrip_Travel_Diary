@@ -51,6 +51,7 @@
     "@tarojs/runtime": "^3.6.37",
     "@tarojs/shared": "3.6.37",
     "@tarojs/taro": "^3.6.37",
+    "miniprogram-formdata": "^2.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "taro-icons": "^0.4.0"

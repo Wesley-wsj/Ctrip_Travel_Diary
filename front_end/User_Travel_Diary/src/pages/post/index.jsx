@@ -1,6 +1,7 @@
 import { View, Image, Input, Textarea, Button, ScrollView, Video } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useState, useEffect } from 'react'
+import FormData from '../../utils/formData'  // 导入 FormData 库
 import './index.scss'
 
 export default function PostPage() {
@@ -171,38 +172,27 @@ export default function PostPage() {
         return
       }
       
-      // 基础表单数据
-      const baseFormData = {
-        title,
-        content
-      }
-      
-      // 添加位置信息（如果有）- 作为JSON对象，只包含address字段
-      if (locationAddress) {
-        // 创建一个只包含address字段的对象
-        const locationObject = { address: locationAddress }
-        // 将对象转换为JSON字符串
-        baseFormData.location = JSON.stringify(locationObject)
-        
-        // 打印位置信息
-        console.log('位置原始字符串:', locationAddress)
-        console.log('位置JSON对象:', locationObject)
-        console.log('位置JSON字符串:', baseFormData.location)
-        console.log('位置字段类型:', typeof baseFormData.location)
-      }
-      
-      // 添加其他可选字段（如果有值）
-      if (departureTime) baseFormData.departureTime = departureTime
-      if (tripDays) baseFormData.tripDays = tripDays
-      if (perCapitaCost) baseFormData.perCapitaCost = perCapitaCost
-      if (travelCompanion) baseFormData.travelCompanion = travelCompanion
-  
-      console.log('提交的数据对象:', baseFormData)
-      console.log('提交数据的完整JSON:', JSON.stringify(baseFormData, null, 2))
-      
       // 尝试无文件提交
       if (imageFiles.length === 0 && videoFiles.length === 0) {
         try {
+          // 无文件时保持原有逻辑，直接使用JSON提交
+          const baseFormData = {
+            title,
+            content
+          }
+          
+          // 添加位置信息（如果有）
+          if (locationAddress) {
+            const locationObject = { address: locationAddress }
+            baseFormData.location = JSON.stringify(locationObject)
+          }
+          
+          // 添加其他可选字段
+          if (departureTime) baseFormData.departureTime = departureTime
+          if (tripDays) baseFormData.tripDays = tripDays
+          if (perCapitaCost) baseFormData.perCapitaCost = perCapitaCost
+          if (travelCompanion) baseFormData.travelCompanion = travelCompanion
+          
           const { statusCode, data } = await Taro.request({
             url: 'http://121.43.34.217:5000/api/diaries/upload',
             method: 'POST',
@@ -228,124 +218,65 @@ export default function PostPage() {
         }
       }
       
-      // 处理有图片的情况
-      if (imageFiles.length > 0) {
-        try {
-          // 将数据转换为普通字符串键值对
-          const formData = {}
-          for (const key in baseFormData) {
-            formData[key] = String(baseFormData[key])
-          }
-          
-          console.log('图片上传使用的表单数据对象:', formData)
-          console.log('图片上传位置字段(JSON字符串):', formData.location)
-          
-          // 上传第一张图片
-          const imgRes = await Taro.uploadFile({
-            url: 'http://121.43.34.217:5000/api/diaries/upload',
-            filePath: imageFiles[0],
-            name: 'images',
-            formData: formData,
-            header: {
-              'Authorization': `Bearer ${token}`
-            }
-          })
-          
-          console.log('图片上传响应:', imgRes)
-          
-          if (imgRes.statusCode !== 200 && imgRes.statusCode !== 201) {
-            try {
-              const responseData = JSON.parse(imgRes.data)
-              throw new Error(JSON.stringify(responseData))
-            } catch (parseError) {
-              throw new Error(imgRes.data || '图片上传失败')
-            }
-          }
-          
-          // 如果有其他图片，继续上传
-          if (imageFiles.length > 1) {
-            const diaryId = JSON.parse(imgRes.data).id || JSON.parse(imgRes.data).diaryId
-            if (diaryId) {
-              for (let i = 1; i < imageFiles.length; i++) {
-                await Taro.uploadFile({
-                  url: 'http://121.43.34.217:5000/api/diaries/upload',
-                  filePath: imageFiles[i],
-                  name: 'images',
-                  formData: { id: diaryId },
-                  header: {
-                    'Authorization': `Bearer ${token}`
-                  }
-                })
-              }
-            }
-          }
-          
-          // 如果还有视频，也上传
-          if (videoFiles.length > 0) {
-            const diaryId = JSON.parse(imgRes.data).id || JSON.parse(imgRes.data).diaryId
-            if (diaryId) {
-              await Taro.uploadFile({
-                url: 'http://121.43.34.217:5000/api/diaries/upload',
-                filePath: videoFiles[0],
-                name: 'video',
-                formData: { id: diaryId },
-                header: {
-                  'Authorization': `Bearer ${token}`
-                }
-              })
-            }
-          }
-          
-          // 上传成功
-          handleUploadSuccess()
-          return
-        } catch (error) {
-          console.error('图片上传错误:', error)
-          throw error
+      // 使用FormData处理有文件的上传 (使用 wx-formdata 库)
+      try {
+        // 创建FormData实例
+        const formData = new FormData()
+        
+        // 添加基本表单数据
+        formData.append('title', title)
+        formData.append('content', content)
+        
+        // 添加位置信息（如果有）
+        if (locationAddress) {
+          const locationObject = { address: locationAddress }
+          formData.append('location', JSON.stringify(locationObject))
         }
-      }
-      
-      // 处理只有视频的情况
-      if (videoFiles.length > 0) {
-        try {
-          // 将数据转换为普通字符串键值对
-          const formData = {}
-          for (const key in baseFormData) {
-            formData[key] = String(baseFormData[key])
-          }
-          
-          console.log('视频上传使用的表单数据对象:', formData)
-          console.log('视频上传位置字段(JSON字符串):', formData.location)
-          
-          // 上传视频
-          const videoRes = await Taro.uploadFile({
-            url: 'http://121.43.34.217:5000/api/diaries/upload',
-            filePath: videoFiles[0],
-            name: 'video',
-            formData: formData,
-            header: {
-              'Authorization': `Bearer ${token}`
-            }
-          })
-          
-          console.log('视频上传响应:', videoRes)
-          
-          if (videoRes.statusCode !== 200 && videoRes.statusCode !== 201) {
-            try {
-              const responseData = JSON.parse(videoRes.data)
-              throw new Error(JSON.stringify(responseData))
-            } catch (parseError) {
-              throw new Error(videoRes.data || '视频上传失败')
-            }
-          }
-          
-          // 上传成功
-          handleUploadSuccess()
-          return
-        } catch (error) {
-          console.error('视频上传错误:', error)
-          throw error
+        
+        // 添加其他可选字段
+        if (departureTime) formData.append('departureTime', departureTime)
+        if (tripDays) formData.append('tripDays', tripDays)
+        if (perCapitaCost) formData.append('perCapitaCost', perCapitaCost)
+        if (travelCompanion) formData.append('travelCompanion', travelCompanion)
+        
+        // 添加所有图片
+        for (let i = 0; i < imageFiles.length; i++) {
+          formData.appendFile('images', imageFiles[i])
         }
+        
+        // 添加视频（如果有）
+        if (videoFiles.length > 0) {
+          formData.appendFile('video', videoFiles[0])
+        }
+        
+        // 获取FormData
+        const data = formData.getData()
+        
+        console.log('FormData上传使用的内容类型:', data.contentType)
+        
+        // 发送请求
+        const res = await Taro.request({
+          url: 'http://121.43.34.217:5000/api/diaries/upload',
+          method: 'POST',
+          header: {
+            'Authorization': `Bearer ${token}`,
+            'content-type': data.contentType
+          },
+          data: data.buffer,
+          // 不能设置 responseType: 'arraybuffer'，因为我们需要解析JSON响应
+        })
+        
+        console.log('FormData上传响应:', res)
+        
+        if (res.statusCode !== 200 && res.statusCode !== 201) {
+          throw new Error(typeof res.data === 'string' ? res.data : JSON.stringify(res.data) || '提交失败')
+        }
+        
+        // 上传成功处理
+        handleUploadSuccess()
+      } catch (error) {
+        console.error('FormData上传错误:', error)
+        throw error
       }
     } catch (error) {
       handleUploadError(error)

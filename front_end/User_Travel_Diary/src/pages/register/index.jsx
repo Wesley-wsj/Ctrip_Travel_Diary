@@ -17,6 +17,11 @@ export default function RegisterPage() {
       return false
     }
 
+    if (username.length < 6 || username.length > 20) {
+      Taro.showToast({ title: '用户名长度需在6-20位之间', icon: 'none' })
+      return false
+    }
+
     if (password !== confirmPassword) {
       Taro.showToast({ title: '两次密码不一致', icon: 'none' })
       return false
@@ -46,22 +51,29 @@ export default function RegisterPage() {
       
       if (avatar) {
         // 有头像时使用 uploadFile
+        console.log('准备上传头像:', avatar)
+        
         response = await Taro.uploadFile({
           url: 'http://121.43.34.217:5000/api/users/register',
           filePath: avatar,
           name: 'avatar',
-          formData: { username, password },
+          formData: { 
+            username, 
+            password 
+          },
           header: {
-            'Content-Type': 'multipart/form-data'
+            'content-type': 'multipart/form-data'
           }
         })
+        
+        console.log('头像上传响应:', response)
       } else {
         // 无头像时使用普通请求
         response = await Taro.request({
           url: 'http://121.43.34.217:5000/api/users/register',
           method: 'POST',
           header: {
-            'Content-Type': 'application/json'
+            'content-type': 'application/json'
           },
           data: { username, password }
         })
@@ -76,14 +88,37 @@ export default function RegisterPage() {
   }
 
   const handleResponse = (res) => {
-    const data = res.data || {}
+    // 解析响应数据 - uploadFile 返回的是字符串，需要解析
+    let data = res.data || {}
     
-    if (res.statusCode === 200) {
+    // 如果是 uploadFile 的响应，data 将是字符串形式
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data)
+        console.log('解析后的响应数据:', data)
+      } catch (e) {
+        console.error('解析响应数据失败:', e)
+      }
+    }
+    
+    if (res.statusCode === 200 || res.statusCode === 201) {
       Taro.showToast({ title: '注册成功', icon: 'success' })
+      
+      // 如果返回了头像URL，可以存储到本地
+      if (data.avatar_url) {
+        console.log('服务器返回的头像URL:', data.avatar_url)
+        // 可以在这里将头像URL存储到全局状态或本地存储中
+        try {
+          Taro.setStorageSync('userAvatarUrl', data.avatar_url)
+        } catch (e) {
+          console.error('保存头像URL失败:', e)
+        }
+      }
+      
       setTimeout(() => Taro.navigateTo({ url: '/pages/login/index' }), 1500)
     } else {
       Taro.showToast({ 
-        title: data.message || `注册失败（${res.statusCode}）`,
+        title: data.message || data.msg || `注册失败（${res.statusCode}）`,
         icon: 'none',
         duration: 3000
       })
@@ -109,16 +144,53 @@ export default function RegisterPage() {
     try {
       const res = await Taro.chooseImage({
         count: 1,
-        sizeType: ['compressed'],
-        sourceType: ['album', 'camera'],
+        sizeType: ['compressed'], // 压缩图片
+        sourceType: ['album', 'camera'], // 允许从相册和相机选择
       })
 
-      if (res.tempFilePaths[0]) {
+      if (res.tempFilePaths && res.tempFilePaths.length > 0) {
+        console.log('选择的图片路径:', res.tempFilePaths[0])
+        console.log('图片信息:', res.tempFiles[0])
+        
+        // 可以在这里添加图片大小限制
+        const file = res.tempFiles[0]
+        if (file.size > 5 * 1024 * 1024) { // 例如限制5MB
+          Taro.showToast({ title: '图片大小不能超过5MB', icon: 'none' })
+          return
+        }
+        
+        // 设置头像路径
         setAvatar(res.tempFilePaths[0])
+        
+        // 提示用户已选择头像
+        Taro.showToast({ title: '已选择头像', icon: 'success', duration: 1500 })
       }
     } catch (err) {
       console.error('头像选择失败:', err)
-      Taro.showToast({ title: '头像选择取消', icon: 'none' })
+      
+      // 更详细的错误处理
+      if (err.errMsg && err.errMsg.includes('cancel')) {
+        // 用户取消选择
+        console.log('用户取消了选择')
+      } else if (err.errMsg && err.errMsg.includes('authorize')) {
+        // 权限问题
+        Taro.showModal({
+          title: '提示',
+          content: '需要相册权限才能选择头像，请在设置中允许访问相册',
+          confirmText: '去设置',
+          success: (res) => {
+            if (res.confirm) {
+              Taro.openSetting()
+            }
+          }
+        })
+      } else {
+        // 其他错误
+        Taro.showToast({ 
+          title: '头像选择失败',
+          icon: 'none'
+        })
+      }
     }
   }
 

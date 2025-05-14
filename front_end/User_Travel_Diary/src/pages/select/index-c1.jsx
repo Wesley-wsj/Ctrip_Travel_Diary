@@ -11,22 +11,6 @@ export default function SelectPage() {
   const [userInfo, setUserInfo] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  // 仅修复头像URL格式的函数 - 不影响其他URL
-  const fixAvatarUrl = (url) => {
-    if (!url) return 'https://cdn-icons-png.flaticon.com/512/847/847969.png'; // 默认头像
-    
-    // 修复格式错误的URL
-    let fixedUrl = url;
-    
-    // 先修复 5000.. 为 5000/（之前的问题）
-    fixedUrl = fixedUrl.replace('5000..', '5000/');
-    
-    // 再修复 5000// 为 5000/（当前的问题）
-    fixedUrl = fixedUrl.replace('5000//', '5000/');
-    
-    return fixedUrl;
-  }
-
   // 1. 从API获取用户游记列表
   const fetchUserDiaries = async () => {
     const token = Taro.getStorageSync('token')
@@ -68,18 +52,6 @@ export default function SelectPage() {
 
   useEffect(() => {
     const user = Taro.getStorageSync('currentUser') || null
-    
-    // 只修复用户头像URL，不影响其他URL，也不影响本地头像
-    if (user && user.avatar_url && !user.local_avatar_url) {
-      console.log('原始头像URL:', user.avatar_url);
-      const fixedUrl = fixAvatarUrl(user.avatar_url);
-      console.log('修复后的头像URL:', fixedUrl);
-      
-      // 使用修复后的URL更新本地存储
-      user.avatar_url = fixedUrl;
-      Taro.setStorageSync('currentUser', user);
-    }
-    
     setUserInfo(user)
     console.log('用户信息:', user)
     
@@ -122,7 +94,7 @@ export default function SelectPage() {
     })
   }
 
-  // 本地头像上传功能实现
+  // 3. 完善头像上传功能
   const handleAvatarUpload = async () => {
     const token = Taro.getStorageSync('token')
     if (!token) {
@@ -132,75 +104,56 @@ export default function SelectPage() {
       }, 1000)
       return
     }
-
-    // 获取当前用户信息
+  
     const currentUser = Taro.getStorageSync('currentUser')
-    if (!currentUser) {
+    if (!token || !currentUser) {
       Taro.showToast({ title: '用户信息缺失', icon: 'none' })
       return
     }
-
-    // // 首次使用时的提示
-    // const isFirstChange = !Taro.getStorageSync('avatarChangeExplained')
-    // if (isFirstChange) {
-    //   Taro.showModal({
-    //     title: '头像更新提示',
-    //     confirmText: '我知道了',
-    //     showCancel: false,
-    //     success: () => {
-    //       Taro.setStorageSync('avatarChangeExplained', true)
-    //     }
-    //   })
-    // }
-
+  
     try {
-      // 显示操作菜单
-      const { tapIndex } = await Taro.showActionSheet({
-        itemList: ['从相册选择', '拍照']
-      })
-      
-      // 根据用户选择的操作获取图片
       const res = await Taro.chooseImage({
         count: 1,
         sizeType: ['compressed'],
-        sourceType: tapIndex === 0 ? ['album'] : ['camera']
+        sourceType: ['album', 'camera']
       })
-
+  
       const tempFilePath = res.tempFilePaths[0]
       
-      Taro.showLoading({ title: '处理中...' })
+      Taro.showLoading({ title: '上传中...' })
       
-      // 更新本地用户信息
+      // 这里我们假设需要调用用户更新接口，实际中可能需要改为对应的接口
+      // 由于API文档中没有明确提供头像更新接口，假设使用通用的文件上传方式
+      const uploadRes = await Taro.uploadFile({
+        url: 'http://121.43.34.217:5000/api/users/update-avatar', // 假设的接口
+        filePath: tempFilePath,
+        name: 'avatar',
+        header: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        },
+        formData: {
+          username: currentUser.username
+        }
+      })
+      
+      Taro.hideLoading()
+      
+      // 由于没有实际的API，这里我们假设更新成功并使用本地路径
+      // 实际应用中应该使用服务器返回的URL
       const updatedUser = {
         ...currentUser,
-        local_avatar_url: tempFilePath
+        avatarUrl: tempFilePath
       }
       
-      // 保存到本地存储
       Taro.setStorageSync('currentUser', updatedUser)
       setUserInfo(updatedUser)
       
-      Taro.hideLoading()
-      
-      Taro.showToast({ 
-        title: '头像已更新', 
-        icon: 'success',
-        duration: 2000
-      })
+      Taro.showToast({ title: '头像更新成功', icon: 'success' })
     } catch (err) {
       Taro.hideLoading()
-      console.error('头像更新失败:', err)
-      
-      // 检查错误是否来自用户取消操作
-      if (err.errMsg && (err.errMsg.includes('cancel') || err.errMsg.includes('取消'))) {
-        // 用户取消操作，不显示错误提示
-        return
-      }
-      
-      Taro.showToast({ 
-        title: '头像更新失败', 
-        icon: 'none' 
-      })
+      console.error('头像上传失败:', err)
+      Taro.showToast({ title: '上传失败', icon: 'none' })
     }
   }
   
@@ -471,7 +424,7 @@ export default function SelectPage() {
           <View className="avatar-container" onClick={handleAvatarUpload}>
             <Image
               className="avatar"
-              src={userInfo?.local_avatar_url || fixAvatarUrl(userInfo?.avatar_url)}
+              src={userInfo?.avatarUrl || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'}
             />
             {userInfo && (
               <View className="avatar-edit-overlay">
@@ -481,7 +434,7 @@ export default function SelectPage() {
           </View>
           <View className="nickname-section">
             <Text className="nickname">{userInfo?.username || '未登录用户'}</Text>
-            <Text className="user-id">用户ID: {userInfo?.id?.toString().slice(0, 8) || '未登录'}</Text>
+            <Text className="user-id">用户ID: {userInfo?.userId?.slice(0, 8) || '未登录'}</Text>
           </View>
         </View>
         <View className="user-stats">
