@@ -33,11 +33,19 @@ $ npm run build:weapp  # 微信小程序生产包
 #### 游记列表瀑布流页面（首页）：
 <img src="/images/首页瀑布流片段.jpg" width="300" />
 
-#### 触底加载&点击悬浮按钮回到顶部：
+#### 触底加载（左） 　& 　　点击悬浮按钮回到顶部（右）：
 <table>
   <tr>
     <td><img src="/images/触底加载.gif" alt="触底加载" width="300"></td>
     <td><img src="/images/回到顶部.gif" alt="回到顶部" width="300"></td>
+  </tr>
+</table>
+
+#### 搜索作者（左） 　& 　　搜索标题（右）：
+<table>
+  <tr>
+    <td><img src="/images/搜索作者.gif" alt="搜索作者" width="300"></td>
+    <td><img src="/images/搜索标题.gif" alt="搜索标题" width="300"></td>
   </tr>
 </table>
 
