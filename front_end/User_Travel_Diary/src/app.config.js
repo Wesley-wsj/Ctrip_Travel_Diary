@@ -10,12 +10,8 @@ export default defineAppConfig({
     'pages/reEditPost/index',
     'pages/register/index',
     'pages/user/index',
-<<<<<<< HEAD
-
-=======
     'pages/shareDetail/index',
     'pages/search/index'
->>>>>>> 870713297fdce665d19aeff1542693e4109cb19c
   ],
   window: {
     backgroundTextStyle: 'light',
