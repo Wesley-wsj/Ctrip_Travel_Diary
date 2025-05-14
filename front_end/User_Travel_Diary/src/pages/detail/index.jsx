@@ -160,7 +160,6 @@ function Detail() {
   )
 }
 
-
 export default Detail
 
 export const config = definePageConfig({
