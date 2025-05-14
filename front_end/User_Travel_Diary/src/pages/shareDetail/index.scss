@@ -25,6 +25,13 @@
     z-index: 1;
     box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
 
+    .pub-location {
+      display: flex;
+      .pub-add {
+        margin-left: 10px;
+      }
+    }
+
     .publish-date {
       display: flex;
       align-items: center;

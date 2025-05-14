@@ -18,6 +18,7 @@ function Detail() {
   // 获取路由参数
   const { id } = Taro.getCurrentInstance().router?.params || {}
   const { note, loading } = useTravelNote(id);
+  console.log(note)
 
   // 添加网络状态检测
   const [isWifi, setIsWifi] = useState(false)
@@ -81,7 +82,7 @@ function Detail() {
           <FontAwesome color='#fff' name="fal fa-map-marker-alt" size={12} />
         </View>
         <View className='location-content'>
-          <Text>{note.location}</Text>
+          <Text>{note.location ? note.location.address : note.location}</Text>
         </View>
         <View className='location-angle'>
           <FontAwesome color='#c8c8c8' name="far fa-chevron-right" size={14} />
@@ -159,9 +160,9 @@ function Detail() {
   )
 }
 
-definePageConfig({
-  enableShareAppMessage: true,
-})
-
 
 export default Detail
+
+export const config = definePageConfig({
+  navigationBarTitleText: '游记详情',
+});

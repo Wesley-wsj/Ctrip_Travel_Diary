@@ -21,8 +21,8 @@ function ShareDetail() {
 
           const processedData = {
             ...detailData,
-            coverImage: detailData.video_url ? detailData.cover : 
-              (detailData.images && detailData.images.length > 0 ? 
+            coverImage: detailData.video_url ? detailData.cover :
+              (detailData.images && detailData.images.length > 0 ?
                 detailData.images[0] + '?x-oss-process=image/resize,w_750' : '')
           }
           setNote(processedData)
@@ -73,7 +73,10 @@ function ShareDetail() {
         </View>
 
         <Text className='title'>{note.title}</Text>
-        <Text className='location'>{note.location}</Text>
+        <View className='pub-location'>
+          <FontAwesome name='fal fa-map-marker-alt' size={14} />
+          <Text className='pub-add'>{note.location ? note.location.address : note.location}</Text>
+        </View>
 
         <View className='publish-date'>
           <FontAwesome name='fa-calendar' size={14} />
@@ -81,7 +84,7 @@ function ShareDetail() {
         </View>
 
         <View className='action-buttons'>
-          <Button 
+          <Button
             className='detail-btn'
             onClick={() => Taro.navigateTo({
               url: `/pages/detail/index?id=${id}`
@@ -89,8 +92,8 @@ function ShareDetail() {
           >
             查看完整内容
           </Button>
-          <Button 
-            className='share-btn' 
+          <Button
+            className='share-btn'
             openType='share'
           >
             分享给好友
@@ -102,3 +105,7 @@ function ShareDetail() {
 }
 
 export default ShareDetail
+
+export const config = definePageConfig({
+  navigationBarTitleText: '游记详情',
+});

@@ -5,6 +5,10 @@ import TravelNotesList from '../../components/TravelNotesList/TravelNotesList'
 import TabBar from '../../components/TabBar'
 import './index.scss'
 
+definePageConfig({
+  navigationBarTitleText: '首页',
+})
+
 export default function HomePage() {
   const {
     key,

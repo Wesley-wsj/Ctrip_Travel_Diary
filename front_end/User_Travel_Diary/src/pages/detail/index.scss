@@ -33,12 +33,12 @@
 
 .location {
   margin: 40rpx 20rpx 20rpx 15rpx;
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   height: 50rpx;
-  width: 240rpx;
+  // width: 240rpx;
   border-radius: 25rpx;
   background-color: rgb(240, 240, 240);
 
@@ -51,6 +51,7 @@
   }
 
   .location-content {
+    margin: 0 10px 0 20px;
     font-size: 30rpx;
   }
 
@@ -136,7 +137,7 @@
   }
   .item-content {
     padding: 0;
-    margin: 0;
+    margin: 5px 0 0 0;
     text-align: center;
     background-color: rgb(250,250,250);
     font-size: 42px;

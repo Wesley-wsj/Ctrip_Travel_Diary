@@ -71,3 +71,7 @@ function UserSpace() {
 }
 
 export default UserSpace
+
+export const config = definePageConfig({
+  navigationBarTitleText: '用户空间',
+});

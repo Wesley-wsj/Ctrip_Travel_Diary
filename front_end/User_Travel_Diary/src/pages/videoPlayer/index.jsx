@@ -47,3 +47,7 @@ function VideoPlayer() {
 }
 
 export default VideoPlayer
+
+export const config = definePageConfig({
+  navigationBarTitleText: '视频播放',
+});

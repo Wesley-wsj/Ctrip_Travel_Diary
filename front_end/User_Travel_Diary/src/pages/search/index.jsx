@@ -49,3 +49,7 @@ export default function SearchPage() {
     </View>
   )
 }
+
+export const config = definePageConfig({
+  navigationBarTitleText: '搜索',
+});
