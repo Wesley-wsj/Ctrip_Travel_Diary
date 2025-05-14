@@ -96,12 +96,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 50 * 1024 * 1024 // 50MB
-  }
-});
+const upload = multer({ dest: '../uploads/diaries/tmp' });
 
 
 // // 配置文件上传
@@ -315,7 +310,41 @@ router.post('/reviewer-search',staffAuth, async (req, res) => {
   }
 });
 
-// 2.7 管理员恢复逻辑删除游记（需要管理员认证）
+// // 2.7 管理员恢复逻辑删除游记（需要管理员认证）//id不变
+// router.patch('/:id/recover', adminAuth, async (req, res) => {
+//   try {
+//     // 先查找游记
+//     const diary = await Diary.findOne({
+//       where: { id: req.params.id }
+//     });
+
+//     // 验证游记是否存在
+//     if (!diary) {
+//       return res.status(404).json({ msg: '游记不存在' });
+//     }
+
+//     // 验证游记是否已经被删除
+//     if (!diary.is_deleted) {
+//       return res.status(400).json({ msg: '游记未被逻辑删除' });
+//     }
+
+//     // 执行逻辑恢复
+//     await Diary.update(
+//       { is_deleted: 0 ,
+//         status: 'pending'//状态变为待审核
+//       }, 
+//       { where: { id: req.params.id } }
+//     );
+    
+//     res.json({ msg: '逻辑恢复成功' });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ msg: '服务器错误' });
+//   }
+// });
+
+
+// 2.7 管理员恢复逻辑删除游记（需要管理员认证）//id改变
 router.patch('/:id/recover', adminAuth, async (req, res) => {
   try {
     // 先查找游记
@@ -333,10 +362,22 @@ router.patch('/:id/recover', adminAuth, async (req, res) => {
       return res.status(400).json({ msg: '游记未被逻辑删除' });
     }
 
+    
+    // 2. 获取最新的 diary_id
+    const latestDiary = await Diary.findOne({
+      where: { is_deleted: 0 },  // 只查找未删除的游记
+      order: [['id', 'DESC']],  // 按diary_id降序排序
+      attributes: ['id']  // 只获取diary_id字段
+    });
+
+    // 3. 计算新的 diary_id
+    const newDiaryId = latestDiary ? latestDiary.diary_id + 1 : 1;
+
     // 执行逻辑恢复
     await Diary.update(
       { is_deleted: 0 ,
-        status: 'pending'//状态变为待审核
+        status: 'pending',//状态变为待审核
+        id: newDiaryId
       }, 
       { where: { id: req.params.id } }
     );
@@ -348,7 +389,47 @@ router.patch('/:id/recover', adminAuth, async (req, res) => {
   }
 });
 
-// 2.8 获取拒绝游记列表（工作人员认证）
+
+// // 2.7 恢复已删除的游记（需要认证）
+// router.post('/restore/:id', staffAuth, async (req, res) => {
+//   try {
+//     const { id } = req.params;  // 从URL参数中获取要恢复的游记ID
+
+//     // 1. 查找要恢复的游记
+//     const diary = await Diary.findByPk(id);
+//     if (!diary) {
+//       return res.status(404).json({ msg: '游记不存在' });
+//     }
+
+//     // 2. 获取最新的 diary_id
+//     const latestDiary = await Diary.findOne({
+//       where: { is_deleted: 0 },  // 只查找未删除的游记
+//       order: [['diary_id', 'DESC']],  // 按diary_id降序排序
+//       attributes: ['diary_id']  // 只获取diary_id字段
+//     });
+
+//     // 3. 计算新的 diary_id
+//     const newDiaryId = latestDiary ? latestDiary.diary_id + 1 : 1;
+
+//     // 4. 恢复游记并更新 diary_id
+//     await diary.update({
+//       is_deleted: 0,  // 将删除标记设为0（未删除）
+//       diary_id: newDiaryId,  // 设置新的diary_id
+//       status: 'pending',  // 状态设为待审核
+//       updated_at: new Date()  // 更新修改时间
+//     });
+
+//     res.json({ 
+//       msg: '恢复成功',
+//       diary_id: newDiaryId
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ msg: '服务器错误' });
+//   }
+// });
+
+// 2.8 获取已删除游记列表（工作人员认证）
 router.get('/deleted-list', staffAuth, async (req, res) => {
   try {
     const { page = 1, page_size = 10 } = req.query;
@@ -378,6 +459,7 @@ router.get('/deleted-list', staffAuth, async (req, res) => {
     res.status(500).json({ msg: '服务器错误' });
   }
 });
+
 
 // 3. 获取已审核游记列表（不需要认证）
 router.get('/approved-list', async (req, res) => {
@@ -471,63 +553,79 @@ router.post('/search',  async (req, res) => {
 });
 
 
-
-// 5. 创建新游记（需要用户认证）
+// 5. 创建新游记（需要用户认证），支持 form-data 文件上传
 router.post('/upload', userAuth, upload.fields([
   { name: 'images', maxCount: 9 },
   { name: 'video', maxCount: 1 }
 ]), async (req, res) => {
   try {
-    const { 
-      title, 
-      content, 
-      location, 
+    const {
+      title,
+      content,
+      location,
       departure_time,
       avg_cost,
       companions,
-      days 
+      days
     } = req.body;
-    
-    // 处理图片并计算第一张图片的宽高比
+    const images = req.files['images'] || [];
+    const videoFile = req.files['video'] ? req.files['video'][0] : null;
+
+    if (!title || !content) {
+      return res.status(400).json({ msg: '标题和内容不能为空' });
+    }
+    if (!images || images.length === 0) {
+      return res.status(400).json({ msg: '至少需要上传一张图片' });
+    }
+
+    // 处理图片
     let firstImageRatio = null;
-    const images = req.files.images ? await Promise.all(req.files.images.map(async (file, index) => {
-      if (index === 0) {
-        try {
-          const metadata = await sharp(file.path).metadata();
-          firstImageRatio = metadata.width / metadata.height;
-        } catch (err) {
-          console.error('获取图片宽高比失败:', err);
-        }
+    const processedImages = await Promise.all(images.map(async (file, index) => {
+      const dir = '../uploads/diaries/images';
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
       }
-      return `../uploads/diaries/images/${file.filename}`;
-    })) : [];
+      const filename = `diary-${Date.now()}-${index}.jpg`;
+      const filepath = `${dir}/${filename}`;
+      // 用 sharp 压缩并保存
+      await sharp(file.path)
+        .jpeg({ quality: 80 })
+        .toFile(filepath);
+      // 计算第一张图片的宽高比
+      if (index === 0) {
+        const metadata = await sharp(file.path).metadata();
+        firstImageRatio = metadata.width / metadata.height;
+      }
+      // 删除临时文件
+      fs.unlinkSync(file.path);
+      return filepath;
+    }));
 
     let videoUrl = null;
     let coverPath = null;
+    if (videoFile) {
+      const videoDir = '../uploads/diaries/videos';
+      if (!fs.existsSync(videoDir)) {
+        fs.mkdirSync(videoDir, { recursive: true });
+      }
+      const videoFilename = `diary-${Date.now()}.mp4`;
+      const videoPath = `${videoDir}/${videoFilename}`;
+      fs.renameSync(videoFile.path, videoPath);
+      videoUrl = videoPath;
 
-    // 如果上传了视频，截取第一帧作为封面
-    if (req.files.video) {
-      videoUrl = `../uploads/diaries/videos/${req.files.video[0].filename}`;
-      
-      // 生成封面文件名
-      const coverFilename = `cover-${Date.now()}.jpg`;
-      coverPath = `../uploads/diaries/covers/${coverFilename}`;
-      
-      // 确保封面目录存在
-    //   const coverDir = '../uploads/diaries/covers';
-        const coverDir = '/www/wwwroot/backend/uploads/diaries/covers';
+      // 生成封面
+      const coverDir = '../uploads/diaries/covers';
       if (!fs.existsSync(coverDir)) {
         fs.mkdirSync(coverDir, { recursive: true });
       }
-
-      // 截取视频第一帧
+      const coverFilename = `cover-${Date.now()}.jpg`;
+      coverPath = `${coverDir}/${coverFilename}`;
       await new Promise((resolve, reject) => {
-        ffmpeg(req.files.video[0].path)
+        ffmpeg(videoPath)
           .screenshots({
             timestamps: ['00:00:00'],
             filename: coverFilename,
             folder: coverDir,
-            // size: '1280x720'  // 设置封面图片尺寸
           })
           .on('end', () => {
             console.log('封面截取成功');
@@ -540,35 +638,24 @@ router.post('/upload', userAuth, upload.fields([
       });
     }
 
-    if (!title || !content) {
-      return res.status(400).json({ msg: '标题和内容不能为空' });
-    }
-
-    if (images.length === 0) {
-      return res.status(400).json({ msg: '至少需要上传一张图片' });
-    }
-
-    const avatar_url = '../uploads/avatar_url/' + req.user.avatar_url.split('/').slice(-1)[0];
-    
+    const avatar_url = '../uploads/avatar/' + req.user.avatar_url.split('/').slice(-1)[0];
     const diary = await Diary.create({
       title,
       content,
       location: location ? JSON.parse(location) : null,
-      images,
+      images: processedImages,
       video_url: videoUrl,
-      cover: coverPath,  // 添加封面路径
+      cover: coverPath,
       user_id: req.user.id,
       username: req.user.username,
       avatar_url: avatar_url,
       status: 'pending',
-    // status:"rejected",//.....................................................................//.........................
       first_image_ratio: firstImageRatio,
       departure_time,
       avg_cost: avg_cost ? parseFloat(avg_cost) : null,
       companions,
       days: days ? parseFloat(days) : null
     });
-
     res.status(201).json(processMultipleDiaries(diary, req));
   } catch (err) {
     console.error(err);
@@ -581,8 +668,9 @@ router.get('/:id', staffAuth, async (req, res) => {
   try {
     const diary = await Diary.findOne({
       where: { 
-        id: req.params.id,
-        is_deleted: 0 
+        id: req.params.id
+        // ,
+        // is_deleted: 0 
       }
     });
 
@@ -669,20 +757,20 @@ router.put('/update/:id', userAuth, upload.fields([
       return res.status(404).json({ msg: '游记不存在或无法修改' });
     }
 
-    const avatar_url = '../uploads/avatar_url/' + req.user.avatar_url.split('/').slice(-1)[0];
+    const avatar_url = '../uploads/avatar/' + req.user.avatar_url.split('/').slice(-1)[0];
     
     const updateData = { 
-      title, 
-      content, 
-      location: location ? JSON.parse(location) : null,
+      title: title || diary.title, 
+      content: content || diary.content, 
+      location: location ? JSON.parse(location) : diary.location,
       username: req.user.username,
       avatar_url: avatar_url,
       status: 'pending',
       reject_reason: null,
-      departure_time,
-      avg_cost: avg_cost ? parseFloat(avg_cost) : null,
-      companions,
-      days: days ? parseFloat(days) : null
+      departure_time: departure_time || diary.departure_time,
+      avg_cost: avg_cost ? parseFloat(avg_cost) : diary.avg_cost,
+      companions: companions || diary.companions,
+      days: days ? parseFloat(days) : diary.days
     };
     
     if (req.files) {
