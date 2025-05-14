@@ -33,13 +33,13 @@ $ npm run build:weapp  # 微信小程序生产包
 ## 🚀 后端及PC审核端
 
 #### 前端登录页面：
-![屏幕截图 2025-05-14 215538](https://hackmd.io/_uploads/S1FGZ7GZxg.png)
+![image](/images/前端登录界面.png)
 #### 游记列表页面：
-![image](https://hackmd.io/_uploads/SkPPlXfZee.png)
+![image](/images/游记列表.png)
 #### 游记详情页面：
-![image](https://hackmd.io/_uploads/Hk-cg7MWeg.png)
+![image](/images/游记详情.png)
 #### 游记审核逻辑：
-![image](https://hackmd.io/_uploads/BkUiWXG-gl.png)
+![image](/images/游记审核逻辑.png)
 
 ### 游记数据库字段
 | 字段名              | 类型            | 说明                                         |
