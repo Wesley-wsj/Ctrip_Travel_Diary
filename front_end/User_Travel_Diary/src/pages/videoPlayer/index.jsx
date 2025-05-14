@@ -4,7 +4,8 @@ import { useEffect } from 'react'
 import './index.scss'
 
 function VideoPlayer() {
-  const { videoUrl } = Taro.getCurrentInstance().router?.params || {}
+  // const [showAlert, setShowAlert] = useState(false)
+  const { videoUrl, isWifi } = Taro.getCurrentInstance().router?.params || {}
 
   useEffect(() => {
     if (!videoUrl) {
@@ -13,6 +14,13 @@ function VideoPlayer() {
         icon: 'none'
       })
       setTimeout(() => Taro.navigateBack(), 1500)
+    }
+    if (isWifi === 'false') {
+      Taro.showToast({
+        title: '您当前正在使用移动网络，请注意流量消耗~',
+        icon: 'none',
+        duration: 2000
+      })
     }
   }, [videoUrl])
 
@@ -39,3 +47,7 @@ function VideoPlayer() {
 }
 
 export default VideoPlayer
+
+export const config = definePageConfig({
+  navigationBarTitleText: '视频播放',
+});

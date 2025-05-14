@@ -1,0 +1,43 @@
+.content {
+  margin-top: 5vh;
+  height: 85.5vh;
+
+  .empty-notes {
+    text-align: center;
+    padding: 30px 0;
+    color: #999;
+  }
+}
+
+.search-input {
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 26px;
+}
+
+.virtual-waterfall {
+  margin-left: 10px;
+}
+
+.back-to-top {
+  position: fixed;
+  right: 40px;
+  bottom: 200px; // 可以根据需要调整位置
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 999;
+  
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+}
