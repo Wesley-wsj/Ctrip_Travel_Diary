@@ -85,6 +85,18 @@ $ npm run build:weapp  # 微信小程序生产包
 #### 用户空间页显示：
 <img src="/images/用户空间页面.jpg" width="300" />
 
+#### 登陆与注册
+<table>
+  <tr>
+    <th style="text-align:center"><h4>登陆</h4></th>
+    <th style="text-align:center"><h4>注册</h4></th>
+  </tr>
+  <tr>
+    <td><img src="/images/登陆.gif" alt="登陆" width="300"></td>
+    <td><img src="/images/登陆注册.gif" alt="注册" width="300"></td>
+  </tr>
+</table>
+
 #### 我的主页瀑布显示+游记状态显示（我的主页）：
 <img src="/images/我的主页.png" width="300" />
 
