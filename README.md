@@ -49,6 +49,9 @@ $ npm run build:weapp  # 微信小程序生产包
   </tr>
 </table>
 
+#### 我的主页瀑布显示+游记状态显示（我的主页）：
+<img src="/images/我的主页.jpg" width="300" />
+
 ## 🚀 后端及PC审核端
 
 #### 前端登录页面：
