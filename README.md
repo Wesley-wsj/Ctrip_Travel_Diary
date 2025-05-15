@@ -99,6 +99,8 @@ $ npm run build:weapp  # 微信小程序生产包
 
 #### 我的主页瀑布显示+游记状态显示（我的主页）：
 <img src="/images/我的主页.png" width="300" />
+#### 发布功能：
+<img src="/images/发布.gif" width="300" />
 
 ## 🚀 后端及PC审核端
 
