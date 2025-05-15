@@ -39,8 +39,8 @@ $ npm run build:weapp  # 微信小程序生产包
     <th style="text-align:center"><h4>点击悬浮按钮回到顶部</h4></th>
   </tr>
   <tr>
-    <td><img src="/images/触底加载.gif" alt="触底加载" width="200"></td>
-    <td><img src="/images/回到顶部.gif" alt="回到顶部" width="200"></td>
+    <td><img src="/images/触底加载.gif" alt="触底加载" width="300"></td>
+    <td><img src="/images/回到顶部.gif" alt="回到顶部" width="300"></td>
   </tr>
 </table>
 
@@ -50,8 +50,8 @@ $ npm run build:weapp  # 微信小程序生产包
     <th style="text-align:center"><h4>搜索标题</h4></th>
   </tr>
   <tr>
-    <td><img src="/images/搜索作者.gif" alt="搜索作者" width="200"></td>
-    <td><img src="/images/搜索标题.gif" alt="搜索标题" width="200"></td>
+    <td><img src="/images/搜索作者.gif" alt="搜索作者" width="300"></td>
+    <td><img src="/images/搜索标题.gif" alt="搜索标题" width="300"></td>
   </tr>
 </table>
 
