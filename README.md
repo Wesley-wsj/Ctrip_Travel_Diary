@@ -39,8 +39,8 @@ $ npm run build:weapp  # 微信小程序生产包
     <th style="text-align:center"><h4>点击悬浮按钮回到顶部</h4></th>
   </tr>
   <tr>
-    <td><img src="/images/触底加载.gif" alt="触底加载" width="300"></td>
-    <td><img src="/images/回到顶部.gif" alt="回到顶部" width="300"></td>
+    <td><img src="/images/触底加载.gif" alt="触底加载" width="200"></td>
+    <td><img src="/images/回到顶部.gif" alt="回到顶部" width="200"></td>
   </tr>
 </table>
 
@@ -50,21 +50,40 @@ $ npm run build:weapp  # 微信小程序生产包
     <th style="text-align:center"><h4>搜索标题</h4></th>
   </tr>
   <tr>
-    <td><img src="/images/搜索作者.gif" alt="搜索作者" width="300"></td>
-    <td><img src="/images/搜索标题.gif" alt="搜索标题" width="300"></td>
+    <td><img src="/images/搜索作者.gif" alt="搜索作者" width="200"></td>
+    <td><img src="/images/搜索标题.gif" alt="搜索标题" width="200"></td>
   </tr>
 </table>
 
+#### 游记详情页面显示：
+<img src="/images/游记详情页面.jpg" width="300" />
+
+#### 视频+图片轮播效果：
 <table>
   <tr>
-    <th style="text-align:center"><h4>搜索作者</h4></th>
-    <th style="text-align:center"><h4>搜索标题</h4></th>
+    <th style="text-align:center"><h4>wifi自动播放</h4></th>
+    <th style="text-align:center"><h4>移动网络显示视频封面</h4></th>
   </tr>
   <tr>
-    <td><img src="/images/搜索作者.gif" alt="搜索作者" width="300"></td>
-    <td><img src="/images/搜索标题.gif" alt="搜索标题" width="300"></td>
+    <td><img src="/images/WIFI.gif" alt="WIFI" width="300"></td>
+    <td><img src="/images/移动网络.gif" alt="移动网络" width="300"></td>
   </tr>
 </table>
+
+#### 分享功能：
+<table>
+  <tr>
+    <th style="text-align:center"><h4>游记详情分享承接页</h4></th>
+    <th style="text-align:center"><h4>微信小程序分享演示</h4></th>
+  </tr>
+  <tr>
+    <td><img src="/images/游记分享承接页.jpg" alt="分享承接页" width="300"></td>
+    <td><img src="/images/微信小程序分享.gif" alt="小程序分享" width="300"></td>
+  </tr>
+</table>
+
+#### 用户空间页显示：
+<img src="/images/用户空间页面.jpg" width="300" />
 
 #### 我的主页瀑布显示+游记状态显示（我的主页）：
 <img src="/images/我的主页.png" width="300" />
