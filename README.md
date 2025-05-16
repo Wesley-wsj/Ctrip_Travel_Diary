@@ -141,7 +141,7 @@ $ npm run build:weapp  # 微信小程序生产包
 ### 安装与运行
 #### 后端数据库与接口
     cd backed
-    npm install express sequelize mysql2 jsonwebtoken bcryptjs multer sharp body-parser cors dotenv fluent-ffmpeg sharp
+    npm install
     node app.js
 #### PC端审核系统
     cd frontend-audit-system
